@@ -30,6 +30,7 @@ class GenerateMenus
                 $user = auth()->user();
                 if (\Laratrust::can('menu.view')) {
                     $adminMenu = $menu->add('管理選單', 'javascript:void(0)');
+                    $adminMenu->add('競賽管理', ['route' => 'contest.index']);
 
                 }
                 $userMenu = $menu->add('<img src="'.Gravatar::src($user->email, 32).'" class="image is-32x32" style="border-radius: 50%;">', 'javascript:void(0)');

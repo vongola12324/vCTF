@@ -11,11 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', 'FrontController@index')->name('index');
 
-Route::group(['middleware' => ['auth', 'email']], function () {
+Route::group(['middleware' => ['auth', 'check.contest'], 'prefix' => 'manage'], function () {
     //會員管理
     //權限：user.manage、user.view
 //    Route::resource('user', 'UserController', [
@@ -41,6 +39,8 @@ Route::group(['middleware' => ['auth', 'email']], function () {
 //        Route::get('edit', 'ProfileController@getEditProfile')->name('profile.edit');
 //        Route::put('update', 'ProfileController@updateProfile')->name('profile.update');
 //    });
+    // 競賽管理
+    Route::resource('contest', 'ContestController');
 });
 
 Route::group(['namespace' => 'Auth'], function () {

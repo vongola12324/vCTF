@@ -14,7 +14,8 @@ class ContestController extends Controller
      */
     public function index()
     {
-        //
+        $contests = Contest::with('users')->paginate(10);
+        return view('manage.contest.index', compact('contests'));
     }
 
     /**
@@ -24,7 +25,7 @@ class ContestController extends Controller
      */
     public function create()
     {
-        //
+        return view()
     }
 
     /**
