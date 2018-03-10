@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Role;
 use App\User;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -28,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -43,30 +46,48 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'nickname'    => 'required|string|max:255',
+            'email'       => 'required|string|email|max:255|unique:users',
+            'password'    => 'required|string|min:6|confirmed',
+            'website'     => 'nullable|string',
+            'affiliation' => 'nullable|string',
+            'country'     => 'nullable|string',
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \App\User
      */
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'name'        => $data['nickname'],
+            'email'       => $data['email'],
+            'password'    => Hash::make($data['password']),
+            'website'     => isset($data['website']) ? $data['website'] : null,
+            'affiliation' => isset($data['affiliation']) ? $data['affiliation'] : null,
+            'country'     => isset($data['country']) ? $data['country'] : null,
         ]);
+    }
+
+    public function registered(Request $request, User $user)
+    {
+        $user->update([
+            'register_at' => Carbon::now(),
+            'register_ip' => $request->ip(),
+        ]);
+        if ($user->id === 1) {
+            $user->attachRole(Role::whereName('Admin')->first());
+        }
+        return;
     }
 }

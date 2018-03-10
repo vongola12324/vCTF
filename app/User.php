@@ -23,8 +23,10 @@ use Laratrust\Traits\LaratrustUserTrait;
  * @property string|null $remember_token
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Hint[] $hints
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Permission[] $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Record[] $records
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Role[] $roles
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereAffiliation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCountry($value)
@@ -58,6 +60,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'website',
+        'country',
+        'affiliation',
+        'register_at',
+        'register_ip',
+        'last_login_at',
+        'last_login_ip',
     ];
 
     /**
@@ -69,4 +78,14 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function records()
+    {
+        return $this->hasMany('App\Record');
+    }
+
+    public function hints()
+    {
+        return $this->belongsToMany('App\Hint', 'hint_user');
+    }
 }
