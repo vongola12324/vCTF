@@ -25,7 +25,7 @@ class ContestController extends Controller
      */
     public function create()
     {
-        return view()
+        return view('manage.contest.create-or-edit');
     }
 
     /**
@@ -58,7 +58,8 @@ class ContestController extends Controller
      */
     public function edit(Contest $contest)
     {
-        //
+        return view('manage.contest.create-or-edit', compact('contest'));
+
     }
 
     /**
