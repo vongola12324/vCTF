@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Observers\QuestObserver;
+use App\Observers\SettingObserver;
+use App\Quest;
+use App\Setting;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +17,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Setting::observe(SettingObserver::class);
+        Quest::observe(QuestObserver::class);
     }
 
     /**

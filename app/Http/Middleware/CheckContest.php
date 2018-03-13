@@ -17,11 +17,8 @@ class CheckContest
     public function handle($request, Closure $next)
     {
         $current = Setting::whereKey('current_contest')->first();
-        if ($current === null) {
-            session(['current_contest' => null]);
-        } else {
-            session(['current_contest' => $current->data]);
-        }
+        session(['current_contest' => $current->value]);
+
         return $next($request);
     }
 }

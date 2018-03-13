@@ -1,10 +1,22 @@
 {
-  "name": "laravel/laravel",
-  "description": "The Laravel Framework.",
+  "name": "vongola12324/vCTF",
+  "description": "A simple CTF system implement by Laravel.",
+  "version": "0.0.0",
   "keywords": [
-    "framework",
-    "laravel"
+    "CTF"
   ],
+  "authors": [
+    {
+      "name": "Vongola",
+      "email": "vongola12324@coder.tw",
+      "homepage": "https://vongola.tw",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/vongola12324/vctf/issues",
+    "wiki": "https://github.com/vongola12324/vCTF/wiki"
+  },
   "license": "MIT",
   "type": "project",
   "require": {
@@ -16,12 +28,12 @@
     "fideloper/proxy": "^4.0",
     "laravel/framework": "5.6.*",
     "laravel/tinker": "^1.0",
-    "laravelcollective/html": "^5.6",
     "lavary/laravel-menu": "^1.7",
     "predis/predis": "^1.1",
     "recca0120/laravel-tracy": "^1.8",
     "santigarcor/laratrust": "^5.0",
     "spatie/laravel-backup": "^5.4",
+    "spatie/laravel-html": "^2.19",
     "thomaswelton/laravel-gravatar": "^1.1",
     "yish/generators": "^2.0"
   },
@@ -40,7 +52,10 @@
     ],
     "psr-4": {
       "App\\": "app/"
-    }
+    },
+    "files": [
+      "bootstrap/constants.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

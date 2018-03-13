@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $name
+ * @property string $display_name
  * @property \Carbon\Carbon|null $start_at
  * @property \Carbon\Carbon|null $end_at
  * @property \Carbon\Carbon|null $created_at
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Quest[] $quests
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $users
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Contest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Contest whereDisplayName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Contest whereEndAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Contest whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Contest whereName($value)
@@ -27,6 +29,7 @@ class Contest extends Model
 {
     protected $fillable = [
         'name',
+        'display_name',
         'start_at',
         'end_at',
     ];

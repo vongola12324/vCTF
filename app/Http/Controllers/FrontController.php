@@ -9,21 +9,19 @@ use Illuminate\Http\Request;
 class FrontController extends Controller
 {
     /** @var Contest $contest */
-    protected $contest;
+    protected $contest, $hasJoin;
 
     public function __construct()
     {
-        if (session('current_contest', null) !== null) {
-            $contest = Contest::whereId(intval(session('current_contest')))->first();
-        } else {
-            $contest = null;
-        }
+        $this->contest = Contest::whereName(session('current_contest', 'Public'))->first();
+        $this->hasJoin = in_array(auth()->user(), $this->contest->users);
     }
 
     public function index()
     {
         $contest = $this->contest;
-        return view('index', compact('contest'));
+        $hasJoin = $this->hasJoin;
+        return view('index', compact('contest', 'hasJoin'));
     }
 
     public function team()
@@ -35,7 +33,8 @@ class FrontController extends Controller
     public function quest()
     {
         $quests = $this->contest->quests;
-        return view('quest', compact('quests'));
+        $hasJoin = $this->hasJoin;
+        return view('quest', compact('quests', 'hasJoin'));
     }
 
     public function scoreboard()

@@ -13,7 +13,20 @@
                 {{ method_field('patch') }}
             @endif
             {{ csrf_field() }}
-
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">競賽名稱</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control has-icons-left has-icons-right">
+                            <input class="input" type="email" placeholder="這將會成爲您未來登入的信箱地址。e.g. alexsmith@gmail.com"
+                                   name="email" value="{{ old('email') or '' }}" required>
+                            <span class="icon is-left"><i class="far fa-envelope"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 @endsection

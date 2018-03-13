@@ -13,7 +13,18 @@
 
 Route::get('/', 'FrontController@index')->name('index');
 
-Route::group(['middleware' => ['auth', 'check.contest'], 'prefix' => 'manage'], function () {
+Route::middleware('auth')->group(function() {
+    Route::get('team', 'FrontController@team')->name('team');
+    Route::get('challenge', 'FrontController@quest')->name('challenge');
+    Route::post('challenge', 'APIController@submitQuest')->name('challenge.submit');
+    Route::get('scoreboard', 'FrontController@scoreboard')->name('scoreboard');
+    Route::prefix('manage')->group(function() {
+        Route::resource('contest', 'ContestController');
+    });
+});
+
+
+//Route::group(['middleware' => ['auth']], function () {
     //會員管理
     //權限：user.manage、user.view
 //    Route::resource('user', 'UserController', [
@@ -40,8 +51,7 @@ Route::group(['middleware' => ['auth', 'check.contest'], 'prefix' => 'manage'], 
 //        Route::put('update', 'ProfileController@updateProfile')->name('profile.update');
 //    });
     // 競賽管理
-    Route::resource('contest', 'ContestController');
-});
+//});
 
 Route::group(['namespace' => 'Auth'], function () {
     // 登入/登出驗證
