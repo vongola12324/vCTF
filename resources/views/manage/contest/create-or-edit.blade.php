@@ -20,9 +20,9 @@
                 <div class="field-body">
                     <div class="field">
                         <div class="control has-icons-left has-icons-right">
-                            <input class="input" type="email" placeholder="這將會成爲您未來登入的信箱地址。e.g. alexsmith@gmail.com"
-                                   name="email" value="{{ old('email') or '' }}" required>
-                            <span class="icon is-left"><i class="far fa-envelope"></i></span>
+                            <input class="input" type="text" placeholder="將會用來給參賽者識別競賽。e.g. 第一屆烈火盃CTF競賽"
+                                   name="display_name" value="{{ old('display_name') or '' }}" required>
+                            <span class="icon is-left"><i class="far fa-trophy-alt"></i></span>
                         </div>
                     </div>
                 </div>
