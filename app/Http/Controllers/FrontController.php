@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contest;
 use App\User;
 use Illuminate\Http\Request;
+use Lavary\Menu\Collection;
 
 class FrontController extends Controller
 {
@@ -14,7 +15,7 @@ class FrontController extends Controller
     public function __construct()
     {
         $this->contest = Contest::whereName(session('current_contest', 'Public'))->first();
-        $this->hasJoin = in_array(auth()->user(), $this->contest->users);
+        $this->hasJoin = in_array(auth()->user(), Collection::unwrap($this->contest->users));
     }
 
     public function index()
