@@ -140,8 +140,10 @@ return [
 
         'script-src' => [
             'allow' => [
-                'self',
-                '//cdnjs.cloudflare.com'
+                'http://cdnjs.cloudflare.com',
+                'https://cdnjs.cloudflare.com',
+                'http://cdn.jsdelivr.net',
+                'https://cdn.jsdelivr.net',
             ],
 
             'hashes' => [
@@ -152,7 +154,7 @@ return [
                 //
             ],
 
-            'self' => false,
+            'self' => true,
 
             'unsafe-inline' => false,
 
@@ -163,14 +165,15 @@ return [
 
         'style-src' => [
             'allow' => [
-                //
+                'http://cdn.jsdelivr.net',
+                'https://cdn.jsdelivr.net',
             ],
 
             'nonces' => [
                 //
             ],
 
-            'self' => false,
+            'self' => true,
 
             'unsafe-inline' => false,
 
@@ -186,7 +189,7 @@ return [
                 //
             ],
 
-            'self' => false,
+            'self' => true,
 
             'data' => false,
         ],
