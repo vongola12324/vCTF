@@ -117,7 +117,7 @@ return [
     'custom-csp' => null,
 
     'csp' => [
-        'report-only' => false,
+        'report-only' => true,
 
         'report-uri' => null,
 
@@ -131,7 +131,7 @@ return [
         ],
 
         'default-src' => [
-            //
+            '*'
         ],
 
         'child-src' => [
@@ -140,7 +140,8 @@ return [
 
         'script-src' => [
             'allow' => [
-                //
+                'self',
+                '//cdnjs.cloudflare.com'
             ],
 
             'hashes' => [
