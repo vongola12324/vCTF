@@ -27,6 +27,7 @@
     "bnbwebexpertise/laravel-attachments": "^1.0",
     "doctrine/dbal": "^2.6",
     "fideloper/proxy": "^4.0",
+    "jacobbennett/laravel-http2serverpush": "^2.0",
     "laravel/framework": "5.6.*",
     "laravel/tinker": "^1.0",
     "lavary/laravel-menu": "^1.7",
