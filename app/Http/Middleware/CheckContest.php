@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use App\Setting;
+use Cache;
 use Closure;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class CheckContest
 {
@@ -16,8 +18,16 @@ class CheckContest
      */
     public function handle($request, Closure $next)
     {
-        $current = Setting::whereKey('current_contest')->first();
-        session(['current_contest' => $current->value]);
+        if (!Cache::has('current_contest')) {
+            try {
+                Cache::set('current_contest', Setting::whereKey('current_contest')->first()->value);
+            } catch (InvalidArgumentException $e) {
+                \Log::debug('InvalidArgumentException in CheckContest', [$e]);
+            }
+        }
+        $current = Cache::get('current_contest', 'Public');
+
+        session(['current_contest' => $current]);
 
         return $next($request);
     }
