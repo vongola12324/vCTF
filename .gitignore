@@ -230,7 +230,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-.gitignore
 .idea/
 .phpstorm.meta.php
 _ide_helper.php
