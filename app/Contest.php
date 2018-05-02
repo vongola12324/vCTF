@@ -32,6 +32,7 @@ class Contest extends Model
         'display_name',
         'start_at',
         'end_at',
+        'protect',
     ];
 
     protected $dates = [

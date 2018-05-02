@@ -4,25 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Contest;
 use App\User;
+use Cache;
 use Illuminate\Http\Request;
 use Lavary\Menu\Collection;
 
 class FrontController extends Controller
 {
     /** @var Contest $contest */
-    protected $contest, $hasJoin;
+    protected $contest;
 
     public function __construct()
     {
-        $this->contest = Contest::whereName(session('current_contest', 'Public'))->first();
-        $this->hasJoin = in_array(auth()->user(), Collection::unwrap($this->contest->users));
+        $this->contest = Contest::whereName(Cache::get('current_contest'))->first();
     }
 
     public function index()
     {
         $contest = $this->contest;
-        $hasJoin = $this->hasJoin;
-        return view('index', compact('contest', 'hasJoin'));
+        return view('index', compact('contest'));
     }
 
     public function team()

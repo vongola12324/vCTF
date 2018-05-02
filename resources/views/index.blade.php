@@ -4,12 +4,19 @@
 
 @section('content')
     <div class="columns is-centered">
-        <div class="column is-half">
+        <div class="column">
             <div class="content">
-                <img src="{{ asset('img/logo.png') }}" alt="">
-                <h1 class="has-text-centered">vCTF - A simple CTF site.</h1>
+                <div class="columns is-centered">
+                    <div class="column is-half">
+                        <img src="{{ asset('img/logo.png') }}" >
+                    </div>
+                </div>
+                @if($contest->name === "Public")
+                    <h1 class="has-text-centered">vCTF - A simple CTF site.</h1>
+                @else
+                    <h1 class="has-text-centered">{{ $contest->display_name }}</h1>
+                @endif
                 <p class="has-text-centered is-size-3 has-text-info">
-                    競賽時間<br>
                     @if($contest->start_at && $contest->end_at)
                         {{ $contest->start_at }} ~ {{ $contest->end_at }}
                     @elseif($contest->start_at)
@@ -20,9 +27,13 @@
                         Unlimited Bug Works!
                     @endif
                 </p>
-                <div class="has-text-centered">
-
-                </div>
+                @if($contest->name !== "Public" && auth()->check() && !auth()->user()->contests()->pluck('id')->contains($contest->id))
+                    <p class="has-text-centered">
+                        <a class="button is-danger is-outlined is-large" href="#">
+                            <span class="icon"><i class="far fa-arrow-right"></i></span><span>參加競賽</span>
+                        </a>
+                    </p>
+                @endif
             </div>
         </div>
     </div>

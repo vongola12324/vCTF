@@ -20,6 +20,10 @@ Route::middleware('auth')->group(function() {
     Route::get('scoreboard', 'FrontController@scoreboard')->name('scoreboard');
     Route::prefix('manage')->group(function() {
         Route::resource('contest', 'ContestController');
+        Route::prefix('contest/{contest}')->group(function() {
+            Route::post('change', 'ContestController@change')->name('contest.change');
+            Route::resource('quest', 'QuestController');
+        });
     });
 });
 

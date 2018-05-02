@@ -3,9 +3,10 @@
 namespace App\Http\Middleware;
 
 use App\Setting;
+use Cache;
 use Closure;
 
-class CheckContest
+class GetCurrentContest
 {
     /**
      * Handle an incoming request.
@@ -16,8 +17,10 @@ class CheckContest
      */
     public function handle($request, Closure $next)
     {
-        $current = Setting::whereKey('current_contest')->first();
-        session(['current_contest' => $current->value]);
+        if (!Cache::has('current_contest')) {
+            $current = Setting::whereKey('current_contest')->first();
+            Cache::forever('current_contest', $current->value);
+        }
 
         return $next($request);
     }

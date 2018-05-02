@@ -20,7 +20,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
         \Bepsvpt\SecureHeaders\SecureHeadersMiddleware::class,
-        \App\Http\Middleware\CheckContest::class,
+        \App\Http\Middleware\GetCurrentContest::class,
     ];
 
     /**
