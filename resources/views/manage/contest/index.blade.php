@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-    <h1 class="has-text-centered is-size-1">競賽管理</h1>
+    <h1 class="has-text-centered title">競賽管理</h1>
     @if($contests->count() === 0)
         <div class="has-text-centered" style="padding-top: 20px;">
             <a class="button is-link is-rounded" href="{{ route('contest.create') }}">
@@ -45,6 +45,9 @@
                     <td>{{ $contest->end_at === null ? "未定" : $contest->end_at }}</td>
                     <td>{{ $contest->users->count() }}</td>
                     <td>
+                        <a class="button is-primary is-outlined" href="{{ route('quest.index', $contest) }}">
+                            <span class="icon is-small"><i class="far fa-search"></i></span>
+                        </a>
                         <a class="button is-link is-outlined" href="{{ route('contest.edit', $contest) }}">
                             <span class="icon is-small"><i class="far fa-edit"></i></span>
                         </a>

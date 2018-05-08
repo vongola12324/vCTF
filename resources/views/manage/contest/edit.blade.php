@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-    <h1 class="has-text-centered is-size-1">編輯競賽</h1>
+    <h1 class="has-text-centered title">編輯競賽</h1>
     <div class="has-text-centered column is-8 is-offset-2">
         {{ html()->modelForm($contest, 'patch', route('contest.update', $contest))->open() }}
         @include('manage.contest.form')

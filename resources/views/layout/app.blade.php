@@ -15,7 +15,7 @@
 
 <section class="hero">
     <div class="hero-body">
-        <div class="container">
+        <div class="container" id="app">
             @yield('content')
         </div>
     </div>
@@ -61,6 +61,7 @@
         }
     })
 </script>
+<script src="{{ asset('js/app.js') }}"></script>
 @yield('js')
 </body>
 </html>
