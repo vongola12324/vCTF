@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contest;
 use App\Http\Controllers\Controller;
 use App\User;
 use Carbon\Carbon;
@@ -54,6 +55,7 @@ class LoginController extends Controller
             'last_login_at' => Carbon::now(),
             'last_login_ip' => $request->ip(),
         ]);
+        $user->contests()->attach(Contest::whereName('Public')->first());
         return;
     }
 

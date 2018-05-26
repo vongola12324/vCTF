@@ -19,7 +19,11 @@ Route::middleware('auth')->group(function() {
     Route::post('challenge', 'APIController@submitQuest')->name('challenge.submit');
     Route::get('scoreboard', 'FrontController@scoreboard')->name('scoreboard');
     Route::prefix('manage')->group(function() {
-        Route::resource('contest', 'ContestController');
+        Route::resource('contest', 'ContestController')->except(['show']);
+        Route::prefix('contest/{contest}')->group(function() {
+            Route::post('change', 'ContestController@change')->name('contest.change');
+            Route::resource('quest', 'QuestController');
+        });
     });
 });
 

@@ -54,6 +54,10 @@ class Quest extends Model
         'hidden'
     ];
 
+    protected $casts = [
+        'hidden' => 'boolean'
+    ];
+
     public function contest()
     {
         return $this->belongsTo('App\Contest');
