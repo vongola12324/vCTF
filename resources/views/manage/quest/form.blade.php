@@ -38,7 +38,7 @@
     <div class="field-body">
         <div class="field">
             <div class="control has-icons-left has-icons-right">
-                {{ html()->textarea('content', '')->class('textarea')->attributes(['required'=>'required']) }}
+                {{ html()->textarea('content', '')->class('textarea') }}
             </div>
         </div>
     </div>

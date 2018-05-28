@@ -209,7 +209,7 @@ return [
         'Validator'    => Illuminate\Support\Facades\Validator::class,
         'View'         => Illuminate\Support\Facades\View::class,
         'Menu'         => Lavary\Menu\Facade::class,
-
+        'Markdown'     => GrahamCampbell\Markdown\Facades\Markdown::class,
     ],
 
 ];

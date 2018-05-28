@@ -114,16 +114,18 @@ class QuestController extends Controller
      */
     public function update(Request $request, Contest $contest, Quest $quest)
     {
+//        dd($request->all());
         $this->validate($request, [
             'title'     => 'required|string',
             'category'  => 'required|string',
-            'content'   => 'required|string',
+            'content'   => 'required',
             'flag_type' => 'required|integer|between:0,1',
             'flag'      => 'required|string',
             'point'     => 'required|integer|min:0',
             'seq'       => 'required|integer|min:0',
             'hidden'    => 'nullable|string',
         ]);
+//        dd($request->all());
         $quest->update([
             'category'  => $request->get('category'),
             'title'     => $request->get('title'),

@@ -27,9 +27,9 @@
                         Unlimited Bug Works!
                     @endif
                 </p>
-                @if($contest->name !== "Public" && auth()->check() && !auth()->user()->contests()->pluck('id')->contains($contest->id))
+                @if(auth()->check() && !auth()->user()->contests()->pluck('id')->contains($contest->id))
                     <p class="has-text-centered">
-                        <a class="button is-danger is-outlined is-large" href="#">
+                        <a class="button is-danger is-outlined is-large" href="{{ route('join.contest.page') }}">
                             <span class="icon"><i class="far fa-arrow-right"></i></span><span>參加競賽</span>
                         </a>
                     </p>

@@ -18,6 +18,8 @@ Route::middleware('auth')->group(function() {
     Route::get('challenge', 'FrontController@quest')->name('challenge');
     Route::post('challenge', 'APIController@submitQuest')->name('challenge.submit');
     Route::get('scoreboard', 'FrontController@scoreboard')->name('scoreboard');
+    Route::get('join', 'FrontController@showJoinContestPage')->name('join.contest.page');
+    Route::post('join', 'FrontController@joinContest')->name('join.contest');
     Route::prefix('manage')->group(function() {
         Route::resource('contest', 'ContestController')->except(['show']);
         Route::prefix('contest/{contest}')->group(function() {

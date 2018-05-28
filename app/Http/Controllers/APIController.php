@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Contest;
 use App\Quest;
 use App\User;
+use Cache;
 use Gravatar;
 use Illuminate\Http\Request;
 use Validator;
@@ -19,11 +21,12 @@ class APIController extends Controller
      * @param int $status
      * @param mixed $data
      * @param null $msg
+     *
      * @return string
      */
-    public function APIReturn(int $status, $data = null, $msg = null)
+    private function APIReturn(int $status, $data = null, $msg = null)
     {
-        return json_encode(['status' => $status, 'data' => $data, 'msg' => $msg]);
+        return response()->json(['status' => $status, 'data' => $data, 'msg' => $msg]);
     }
 
     public function getAvatar(Request $request)
@@ -46,40 +49,20 @@ class APIController extends Controller
         return $this->APIReturn($this->status['Success'], ['avatar' => Gravatar::src($user->email, 128)], null);
     }
 
-    /**
-     * Need Auth.
-     * @param Request $request
-     * @return string
-     */
-    public function submitQuest(Request $request)
+
+    public function getQuest(Quest $quest)
     {
-        // 確定方式
-        if (!$request->ajax()) {
-            return $this->APIReturn($this->status['Error'], null, 'Unsupported.');
+        $contest = Contest::whereName(Cache::get('current_contest'))->first();
+        if (!$contest->quests()->pluck('id')->contains($quest->id)) {
+            return $this->APIReturn($this->status['Error'], null, 'No such quest exists.');
+        } else {
+            $data = Quest::whereId($quest->id)->with('attachments')->first();
+            foreach ($data->attachments as $attachment) {
+                $attachment->makeHidden(['id', 'uuid', 'disk', 'key', 'filepath', 'preview_url', 'model_id', 'model_type', 'metadata', 'created_at', 'updated_at']);
+            }
+            $data->makeHidden(['contest_id', 'hidden', 'created_at', 'updated_at']);
+            return $this->APIReturn($this->status['Success'], $data, null);
         }
-        // 檢查是否登入(要有csrf_token)
-        if (!auth()->check()) {
-            return $this->APIReturn($this->status['Error'], null, 'Not login.');
-        }
-        // 驗證資料
-        $validator = Validator::make($request->all(), [
-            'quest' => 'required|integer|exists:quests,id',
-            'flag'  => 'required|string',
-        ]);
-        if ($validator->fails()) {
-            return $this->APIReturn($this->status['Error'], null, 'Invalid data.');
-        }
-        // 檢查是否爲目前競賽
-        $quest = Quest::whereId($request->get('quest'))->first();
-        if ($quest->contest->name !== session('current_quest')) {
-            return $this->APIReturn($this->status['Error'], null, 'Not current contest.');
-        }
-
-        // 檢查flag
-        $correct = false;
-        if ($quest->t)
-        $user = auth()->user();
-
-        return $this->APIReturn($this->status['Success'], ['correct' => true, 'first' => true], null);
     }
+
 }

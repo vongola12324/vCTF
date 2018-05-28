@@ -2,6 +2,10 @@
 
 @section('title', '新增題目')
 
+@section('css')
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+@endsection
+
 @section('content')
     <h1 class="has-text-centered is-size-1">新增題目</h1>
     <div class="has-text-centered column is-8 is-offset-2">
@@ -12,8 +16,13 @@
 @endsection
 
 @section('js')
+    <script src="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script>
         $(document).ready(function () {
+            var contentMde = new SimpleMDE({ element: document.getElementById("content"), toolbarTips:false });
+            $('form').on('submit', function (e) {
+                $("textarea#content").text(contentMde.value());
+            });
             $('.category-tag').each(function () {
                 $(this).click(function(){
                     $('input#category').val($(this).text());

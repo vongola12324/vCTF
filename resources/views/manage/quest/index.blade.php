@@ -31,12 +31,9 @@
                                         <p class="is-1 title">{{ $quest->title }}</p>
                                         <p class="subtitle">本題得分：{{ $quest->point }}，已解人數：0</p>
                                         <hr>
-                                        <p class="is-5 title">
-                                            題目敘述：
-                                        </p>
-                                        <p style="word-break: break-word">
-                                            {{ $quest->content }}
-                                        </p>
+                                        <div class="content">
+                                            {!! Markdown::convertToHtml($quest->content) !!}
+                                        </div>
                                         @if($quest->attachments->count() > 0)
                                             <hr>
                                             @foreach($quest->attachments as $attachment)

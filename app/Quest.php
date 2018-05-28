@@ -3,6 +3,7 @@
 namespace App;
 
 use Bnb\Laravel\Attachments\HasAttachment;
+use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -58,6 +59,16 @@ class Quest extends Model
         'hidden' => 'boolean'
     ];
 
+    protected $appends = [
+        'content_html'
+    ];
+
+    protected $hidden = [
+        'content',
+        'flag',
+        'flag_type'
+    ];
+
     public function contest()
     {
         return $this->belongsTo('App\Contest');
@@ -66,5 +77,10 @@ class Quest extends Model
     public function records()
     {
         return $this->hasMany('App\Record');
+    }
+
+    public function getContentHtmlAttribute()
+    {
+        return Markdown::convertToHtml($this->content);
     }
 }
