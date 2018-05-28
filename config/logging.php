@@ -37,13 +37,13 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path'   => storage_path('logs/laravel.log'),
+            'path'   => storage_path('logs/laravel-2018-05-28.log'),
             'level'  => 'debug',
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path'   => storage_path('logs/laravel.log'),
+            'path'   => storage_path('logs/laravel-2018-05-28.log'),
             'level'  => 'debug',
             'days'   => 7,
         ],

@@ -23,6 +23,11 @@ Route::middleware('auth')->group(function() {
         Route::prefix('contest/{contest}')->group(function() {
             Route::post('change', 'ContestController@change')->name('contest.change');
             Route::resource('quest', 'QuestController');
+            Route::prefix('quest/{quest}')->group(function (){
+                Route::get('file-upload', 'QuestController@showUploadPage')->name('quest.upload.page');
+                Route::post('file-upload', 'QuestController@uploadFile')->name('quest.upload');
+                Route::delete('file-delete', 'QuestController@deleteFile')->name('quest.file.delete');
+            });
         });
     });
 });

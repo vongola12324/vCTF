@@ -80,6 +80,22 @@ return [
     ],
 
     /*
+     * Expect-CT
+     *
+     * Reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Expect-CT
+     */
+
+    'expect-ct' => [
+        'enable' => false,
+
+        'max-age' => 2147483648,
+
+        'enforce' => false,
+
+        'report-uri' => null,
+    ],
+
+    /*
      * Public Key Pinning
      *
      * Reference: https://developer.mozilla.org/en-US/docs/Web/Security/Public_Key_Pinning
@@ -89,10 +105,7 @@ return [
 
     'hpkp' => [
         'hashes' => [
-            // [
-            //     'algo' => 'sha256',
-            //     'hash' => 'hash-value',
-            // ],
+            // 'sha256-hash-value',
         ],
 
         'include-sub-domains' => false,
@@ -114,123 +127,158 @@ return [
      * Note: custom-csp does not support report-only.
      */
 
-    'custom-csp' => '',
+    'custom-csp' => null,
 
     'csp' => [
-        'report-only' => true,
+        'report-only' => false,
 
         'report-uri' => null,
 
+        'block-all-mixed-content' => false,
+
         'upgrade-insecure-requests' => false,
 
-        // enable or disable the automatic conversion of sources to https
-        'https-transform-on-https-connections' => true,
-
-        'base-uri' => [
-            //
-        ],
-
-        'default-src' => [
-            '*'
-        ],
-
-        'child-src' => [
-            //
-        ],
+        /*
+         * Please references script-src directive for available values, only `script-src` and `style-src`
+         * supports `add-generated-nonce`.
+         *
+         * Note: when directive value is empty, it will use `none` for that directive.
+         */
 
         'script-src' => [
             'allow' => [
-                'http://cdnjs.cloudflare.com',
-                'https://cdnjs.cloudflare.com',
-                'http://cdn.jsdelivr.net',
-                'https://cdn.jsdelivr.net',
+                "cdn.jsdelivr.net",
+                "code.jquery.com",
+                'maxcdn.bootstrapcdn.com',
+                "cdnjs.cloudflare.com",
             ],
 
             'hashes' => [
-                // ['sha256' => 'hash-value'],
+                // 'sha256' => [
+                //     'hash-value',
+                // ],
             ],
 
             'nonces' => [
-                //
+                // base64-encoded,
+            ],
+
+            'schemes' => [
+                // https:,
             ],
 
             'self' => true,
 
-            'unsafe-inline' => false,
+            'unsafe-inline' => true,
 
-            'unsafe-eval' => false,
+            'unsafe-eval' => true,
+
+            'strict-dynamic' => false,
+
+            'unsafe-hashed-attributes' => false,
 
             'add-generated-nonce' => false,
         ],
 
         'style-src' => [
             'allow' => [
-                'http://cdn.jsdelivr.net',
-                'https://cdn.jsdelivr.net',
+                "cdnjs.cloudflare.com",
+                "cdn.jsdelivr.net",
+                'maxcdn.bootstrapcdn.com',
+                "fonts.googleapis.com",
+            ],
+
+            'hashes' => [
+                // 'sha256' => [
+                //     'hash-value',
+                // ],
             ],
 
             'nonces' => [
                 //
             ],
 
-            'self' => true,
+            'schemes' => [
+                // https:,
+            ],
 
-            'unsafe-inline' => false,
+            'self'          => true,
+            'unsafe-inline' => true,
 
             'add-generated-nonce' => false,
         ],
 
         'img-src' => [
-            'allow' => [
-                //
+            'allow'   => [
+                "secure.gravatar.com",
             ],
-
-            'types' => [
-                //
+            'schemes' => [
+                "data:",
             ],
-
-            'self' => true,
-
-            'data' => false,
+            'self'    => true,
         ],
 
-        /*
-         * The following directives are all use 'allow' and 'self' flag.
-         *
-         * Note: default value of 'self' flag is false.
-         */
+        'default-src' => [
+            'self' => true,
+        ],
 
-        'font-src' => [
-            //
+        'base-uri' => [
+            'self' => true,
+
         ],
 
         'connect-src' => [
-            //
+            'self' => true,
+
+        ],
+
+        'font-src' => [
+            'allow' => [
+                "maxcdn.bootstrapcdn.com",
+            ],
+            'self'  => true,
         ],
 
         'form-action' => [
-            //
+            'self' => true,
         ],
 
         'frame-ancestors' => [
-            //
+            'self' => true,
+
+        ],
+
+        'frame-src' => [
+            'self' => true,
+
+        ],
+
+        'manifest-src' => [
+            'self' => true,
         ],
 
         'media-src' => [
-            //
+            'self' => true,
+
         ],
 
         'object-src' => [
-            //
+            'self' => true,
+
         ],
 
-        /*
-         * plugin-types only support 'allow'.
-         */
+        'worker-src' => [
+            'self' => true,
+        ],
 
         'plugin-types' => [
-            //
+            // application/x-shockwave-flash,
         ],
+
+        'require-sri-for' => '',
+
+        'sandbox' => '',
+
     ],
 
 ];

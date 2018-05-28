@@ -17,7 +17,6 @@
                 @include('components.navbar-item', ['items' => $left_nav->roots()])
             </div>
             <div class="navbar-end">
-                {{--@php(dd($right_nav->roots()))--}}
                 @include('components.navbar-item', ['items' => $right_nav->roots()])
             </div>
         </div>

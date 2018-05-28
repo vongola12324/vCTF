@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') - {{ env('APP_NAME') }}</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css"/>
     <link rel="stylesheet" href="{{ asset('css/fontawesome-all.min.css') }}">
@@ -50,10 +51,13 @@
         }
 
     });
-    var dropdown = document.querySelector('.navbar-link');
-    $(dropdown).parent().click(function ($e) {
-        $e.stopPropagation();
-        $(dropdown).parent().toggleClass('is-active');
+    var dropdown = $('.navbar-link');
+    dropdown.each(function (i, t) {
+        $(t).parent().click(function ($e) {
+            $e.stopPropagation();
+            $('.navbar-item.is-active').removeClass('is-active');
+            $(t).parent().toggleClass('is-active');
+        });
     });
     $(document).click(function ($e) {
         if ($(dropdown).parent().hasClass('is-active')) {

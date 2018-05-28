@@ -31,7 +31,7 @@ class GenerateMenus
                 if (\Laratrust::can('menu.view')) {
                     $adminMenu = $menu->add('管理選單', 'javascript:void(0)');
                     $adminMenu->add('競賽管理', ['route' => 'contest.index']);
-
+                    $adminMenu->add('紀錄檢視器 <i class="far fa-external-link"></i>', ['route' => 'log-viewer::dashboard', 'target' => '_blank']);
                 }
                 $userMenu = $menu->add('<img src="'.Gravatar::src($user->email, 32).'" class="image is-32x32" style="border-radius: 50%;">', 'javascript:void(0)');
                 $userMenu->add('<strong>' . $user->name . '</strong>', 'javascript:void(0)')->divide( ['class' => 'navbar-divider'] );

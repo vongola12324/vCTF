@@ -128,12 +128,21 @@
 <div class="field is-grouped is-grouped-centered">
     <p class="control">
         <button class="button is-primary" type="submit">
-            送出
+            <span class="icon"><i class="far fa-check"></i></span>
+            <span>送出</span>
         </button>
     </p>
     <p class="control">
-        <a class="button is-light" href="{{ route('contest.index') }}">
-            取消
-        </a>
+        @if(isset($flag) && $flag == 'edit')
+            <a class="button is-link" href="{{ route('quest.show', [$contest, $quest]) }}" style="margin-bottom: 0;">
+                <span class="icon"><i class="far fa-arrow-left"></i></span>
+                <span>返回</span>
+            </a>
+        @else
+            <a class="button is-link" href="{{ route('quest.index', $contest) }}" style="margin-bottom: 0;">
+                <span class="icon"><i class="far fa-arrow-left"></i></span>
+                <span>返回</span>
+            </a>
+        @endif
     </p>
 </div>

@@ -2,6 +2,7 @@
 
 @section('title', '編輯題目')
 
+@php($flag='edit')
 @section('content')
     <h1 class="has-text-centered is-size-1">編輯題目</h1>
     <div class="has-text-centered column is-8 is-offset-2">

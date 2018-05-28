@@ -10,7 +10,7 @@
             </div>
         </div>
     @else
-        <a href="{{ $item->url() }}" class="navbar-item">{!! $item->title !!}</a>
+        <a href="{{ $item->url() }}" class="navbar-item" @if(array_key_exists('target', $item->attributes)) target="{{ $item->attributes['target'] }}" @endif ><span>{!! $item->title !!}</span></a>
     @endif
     @if($item->divider !== [])
         <div class="navbar-divider"></div>

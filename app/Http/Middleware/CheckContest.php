@@ -2,9 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Contest;
 use Closure;
-use Psr\SimpleCache\InvalidArgumentException;
 
 class CheckContest
 {

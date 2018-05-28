@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contest;
 use App\Quest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class QuestController extends Controller
 {
@@ -17,11 +18,12 @@ class QuestController extends Controller
      * Display a listing of the resource.
      *
      * @param Contest $contest
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Contest $contest)
     {
-        $quests = $contest->quests->keyBy('category');
+        $quests = $contest->quests->groupBy('category');
         return view('manage.quest.index', compact('contest', 'quests'));
     }
 
@@ -29,11 +31,12 @@ class QuestController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Contest $contest
+     *
      * @return \Illuminate\Http\Response
      */
     public function create(Contest $contest)
     {
-        $categories = $contest->quests->keyBy('categories')->keys();
+        $categories = $contest->quests->keyBy('category')->keys();
         return view('manage.quest.create', compact('contest', 'categories'));
     }
 
@@ -42,6 +45,7 @@ class QuestController extends Controller
      *
      * @param  \Illuminate\Http\Request $request
      * @param Contest $contest
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, Contest $contest)
@@ -73,12 +77,16 @@ class QuestController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Quest $quest
+     * @param Contest $contest
+     * @param  Quest $quest
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Contest $contest, Quest $quest)
     {
-        //
+        $quests = $contest->quests->groupBy('category');
+        $targetQuest = $quest;
+        return view('manage.quest.index', compact('contest', 'quests', 'targetQuest'));
     }
 
     /**
@@ -86,6 +94,7 @@ class QuestController extends Controller
      *
      * @param Contest $contest
      * @param  \App\Quest $quest
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Contest $contest, Quest $quest)
@@ -100,6 +109,7 @@ class QuestController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @param Contest $contest
      * @param  \App\Quest $quest
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Contest $contest, Quest $quest)
@@ -132,6 +142,7 @@ class QuestController extends Controller
      *
      * @param Contest $contest
      * @param  \App\Quest $quest
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Contest $contest, Quest $quest)
@@ -144,5 +155,48 @@ class QuestController extends Controller
 
         return redirect()->route('quest.index', $contest)->with('success', '競賽題目刪除成功！');
 
+    }
+
+    /**
+     * @param Contest $contest
+     * @param Quest $quest
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function showUploadPage(Contest $contest, Quest $quest)
+    {
+        return view('manage.quest.upload', compact('contest', 'quest'));
+    }
+
+    public function uploadFile(Request $request, Contest $contest, Quest $quest)
+    {
+        $this->validate($request, [
+            'file' => 'required|file'
+        ]);
+        try {
+            $quest->attach($request->file('file'));
+        } catch (\Exception $e) {
+            \Log::debug($e);
+            return redirect()->route('quest.upload.page', [$contest, $quest])->with('warning', '檔案上傳失敗。');
+        }
+        return redirect()->route('quest.upload.page', [$contest, $quest])->with('success', '檔案上傳成功。');
+    }
+
+    public function deleteFile(Request $request, Contest $contest, Quest $quest)
+    {
+        $this->validate($request, [
+            'key' => 'required|string'
+        ]);
+        $attachment = $quest->attachment($request->get('key'));
+        if ($attachment === null) {
+            return redirect()->route('quest.upload.page', [$contest, $quest])->with('warning', '檔案刪除失敗，查無此檔案。');
+        }
+        try {
+            $attachment->delete();
+        } catch (\Exception $e) {
+            \Log::debug($e);
+            return redirect()->route('quest.upload.page', [$contest, $quest])->with('warning', '檔案刪除失敗。');
+        }
+        return redirect()->route('quest.upload.page', [$contest, $quest])->with('success', '檔案刪除成功。');
     }
 }
