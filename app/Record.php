@@ -34,6 +34,10 @@ class Record extends Model
         'correct',
     ];
 
+    protected $casts = [
+        'correct' => 'boolean'
+    ];
+
     public function quest()
     {
         return $this->belongsTo('App\Quest');

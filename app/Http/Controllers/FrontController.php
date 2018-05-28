@@ -75,40 +75,4 @@ class FrontController extends Controller
     }
 
 
-    /**
-     * Need Auth.
-     * @param Request $request
-     * @return string
-     */
-    public function submitQuest(Request $request)
-    {
-        // 確定方式
-        if (!$request->ajax()) {
-            return $this->APIReturn($this->status['Error'], null, 'Unsupported.');
-        }
-        // 檢查是否登入(要有csrf_token)
-        if (!auth()->check()) {
-            return $this->APIReturn($this->status['Error'], null, 'Not login.');
-        }
-        // 驗證資料
-        $validator = Validator::make($request->all(), [
-            'quest' => 'required|integer|exists:quests,id',
-            'flag'  => 'required|string',
-        ]);
-        if ($validator->fails()) {
-            return $this->APIReturn($this->status['Error'], null, 'Invalid data.');
-        }
-        // 檢查是否爲目前競賽
-        $quest = Quest::whereId($request->get('quest'))->first();
-        if ($quest->contest->name !== session('current_quest')) {
-            return $this->APIReturn($this->status['Error'], null, 'Not current contest.');
-        }
-
-        // 檢查flag
-        $correct = false;
-        if ($quest->t)
-            $user = auth()->user();
-
-        return $this->APIReturn($this->status['Success'], ['correct' => true, 'first' => true], null);
-    }
 }
