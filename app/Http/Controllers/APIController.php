@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contest;
 use App\Quest;
+use App\Record;
 use App\User;
 use Cache;
 use Gravatar;
@@ -58,7 +59,19 @@ class APIController extends Controller
         } else {
             $data = Quest::whereId($request->get('id'))->with(['attachments', 'records'])->first();
             foreach ($data->attachments as $attachment) {
-                $attachment->makeHidden(['id', 'uuid', 'disk', 'key', 'filepath', 'preview_url', 'model_id', 'model_type', 'metadata', 'created_at', 'updated_at']);
+                $attachment->makeHidden([
+                    'id',
+                    'uuid',
+                    'disk',
+                    'key',
+                    'filepath',
+                    'preview_url',
+                    'model_id',
+                    'model_type',
+                    'metadata',
+                    'created_at',
+                    'updated_at',
+                ]);
             }
             $data->makeHidden(['contest_id', 'hidden', 'created_at', 'updated_at']);
             return $this->APIReturn($this->status['Success'], $data, null);
@@ -68,7 +81,9 @@ class APIController extends Controller
 
     /**
      * Need Auth.
+     *
      * @param Request $request
+     *
      * @return string
      */
     public function submitQuest(Request $request)
@@ -81,6 +96,7 @@ class APIController extends Controller
         if (!auth()->check()) {
             return $this->APIReturn($this->status['Error'], null, 'Not login.');
         }
+        $user = auth()->user();
         // 驗證資料
         $validator = Validator::make($request->all(), [
             'quest' => 'required|integer|exists:quests,id',
@@ -97,6 +113,29 @@ class APIController extends Controller
         }
 
         // 檢查flag
+        $flag = $request->get('flag');
+        $correct = false;
+        if ($quest->flag_type === FLAG_REGEX) {
+            $correct = preg_match($quest->flag, $flag) === 1;
+        } else {
+            $correct = $flag === $quest->flag;
+        }
+        $record = Record::create([
+            'quest_id'   => $quest->id,
+            'user_id'    => $user->id,
+            'flag'       => $flag,
+            'is_correct' => $correct,
+        ]);
+
+        // 檢查首殺
+        if ($correct) {
+            $first = Record::whereQuestId($quest->id)->orderBy('created_at')->first();
+            if ($first === $record) {
+                $record->update([
+                    'is_first' => true,
+                ]);
+            }
+        }
 
         return $this->APIReturn($this->status['Success'], ['correct' => true, 'first' => true], null);
     }
