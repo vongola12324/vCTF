@@ -11,15 +11,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $quest_id
  * @property int $user_id
  * @property string $flag
- * @property int $correct
+ * @property bool $is_correct
+ * @property bool $is_first
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \App\Quest $quest
  * @property-read \App\User $user
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereCorrect($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereFlag($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereIsCorrect($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereIsFirst($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereQuestId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereUserId($value)
@@ -31,11 +33,13 @@ class Record extends Model
         'quest_id',
         'user_id',
         'flag',
-        'correct',
+        'is_correct',
+        'is_first',
     ];
 
     protected $casts = [
-        'correct' => 'boolean'
+        'is_correct' => 'boolean',
+        'is_first' => 'boolean',
     ];
 
     public function quest()

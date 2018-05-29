@@ -18,11 +18,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $flag_type
  * @property int $point
  * @property int $seq
- * @property int $hidden
+ * @property bool $hidden
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Bnb\Laravel\Attachments\Attachment[] $attachments
  * @property-read \App\Contest $contest
+ * @property-read mixed $content_html
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Record[] $records
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Quest whereCategory($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Quest whereContent($value)
