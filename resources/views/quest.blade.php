@@ -14,7 +14,7 @@
                 </div>
                 <div class="is-multiline columns">
                     @foreach($quest_list as $quest)
-                        <quest :quest_id="{{ $quest->id }}" :quest_title="'{{ $quest->title }}'" :quest_points="'{{ $quest->point }}'" :api="'{{ route('quest.api') }}'" :submit_api="'{{ route('challenge.submit') }}'"></quest>
+                        <quest :quest_id="{{ $quest->id }}" :quest_title="'{{ $quest->title }}'" :quest_points="'{{ $quest->point }}'" :data_api="'{{ route('challenge.api') }}'" :submit_api="'{{ route('challenge.submit') }}'"></quest>
                     @endforeach
                 </div>
             @endforeach

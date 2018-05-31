@@ -18,5 +18,4 @@ use Illuminate\Http\Request;
 //});
 
 Route::post('avatar', 'APIController@getAvatar')->name('avatar');
-Route::post('quest', 'APIController@getQuest')->name('quest.api');
 

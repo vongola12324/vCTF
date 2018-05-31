@@ -12,7 +12,7 @@
             <div class="modal-content">
                 <div class="box">
                     <p class="is-1 title">{{ this.quest['title'] }}</p>
-                    <p class="subtitle">本題得分：{{ this.quest['point'] }}，已解人數：0</p>
+                    <p class="subtitle">本題得分：{{ this.quest['point'] }}，解答狀況：{{ this.solved }} / {{ this.total }}</p>
                     <hr>
                     <div class="content" v-html="this.quest['content_html']"></div>
                     <a v-for="attachment in quest['attachments']" v-if="quest.hasOwnProperty('attachments')" class="button is-link" style="margin-right: 5px;" :href="attachment.url">
@@ -21,10 +21,10 @@
                     </a>
                     <hr style="margin-top: 10px;">
                     <p v-if="isPass" class="has-text-centered has-text-info">你已經完成本題。</p>
-                    <form style="display: inline" v-else>
+                    <div style="display: inline" v-else>
                         <div class="field has-addons">
                             <div class="control is-expanded">
-                                <input class="input" type="text" placeholder="Please enter your flag.">
+                                <input class="input" type="text" placeholder="Please enter your flag." :id="this.inputId">
                             </div>
                             <div class="control">
                                 <button class="button is-success" type="button" @click="submitQuest">
@@ -33,7 +33,10 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    <div class="notification is-danger" v-if="isFailed" style="margin-top: 20px;">
+                        <p class="has-text-centered has-text-weight-bold">Wrong Flag!</p>
+                    </div>
                 </div>
             </div>
             <button class="modal-close is-large" aria-label="close" @click.prevent="inactive"></button>
@@ -59,6 +62,15 @@
         background-color: transparent !important;
         color: rgba(0, 0, 0, 0.6);
     }
+    .is-correct {
+        background-color: #00d1b2;
+        color: #fff;
+    }
+
+    .is-first {
+        background-color: goldenrod;
+        color: #fff;
+    }
 </style>
 
 <script>
@@ -69,7 +81,7 @@
                 title: this.quest_title,
                 point: this.quest_points,
             };
-            this.fetch();
+            this.getData();
         },
         data: function() {
             return {
@@ -77,24 +89,36 @@
                 questStatus: 'is-link',
                 quest: '',
                 flag: '',
+                inputId: 'input_' + this.quest_id,
                 isPass: false,
-                isFirst: true
+                isFirst: true,
+                solved: 0,
+                total: 0,
+                isFailed: false,
             }
         },
         props: [
-            'api',
+            'data_api',
+            'status_api',
             'submit_api',
             'quest_id',
             'quest_title',
             'quest_points'
         ],
         methods: {
-            fetch: function () {
-                this.$http.post(this.api, {'id': this.quest_id}).then(function (response) {
+            getData: function () {
+                this.$http.post(this.data_api, {'id': this.quest_id, 'csrf-token': document.head.querySelector('meta[name="csrf-token"]').content}).then(function (response) {
                     let res = response.body;
-                    this.quest = res.data;
-                    if (res.status === -1) {
-                        alertify.error('獲取題目失敗')
+                    if (res['status'] === -1) {
+                        alertify.error(res['msg']);
+                    } else {
+                        let data = res.data;
+                        this.quest = data['quest'];
+                        this.solved = parseInt(data['status']['solved']);
+                        this.total = parseInt(data['status']['total']);
+                        this.isPass = data['status']['is_correct'];
+                        this.isFirst = data['status']['is_first'];
+                        this.updateStatus();
                     }
                 });
             },
@@ -103,24 +127,35 @@
             },
             inactive: function () {
                 this.isActive = false;
+                this.isFailed = false;
             },
             submitQuest: function () {
-                this.$http.post(this.submit_api, {'quest': this.quest_id, 'flag': '12345', 'csrf-token': document.head.querySelector('meta[name="csrf-token"]').content}).then(function (response) {
-                    let data = response.body.data;
-                    if (data.correct === true) {
-                        this.isPass = true;
-                        if (data.first === true) {
-                            this.isFirst = true;
+                let input = $('#' + this.inputId);
+                this.isFailed = false;
+                this.$http.post(this.submit_api, {'quest': this.quest_id, 'flag': input.val(), 'csrf-token': document.head.querySelector('meta[name="csrf-token"]').content}).then(function (response) {
+                    let res = response.body;
+                    if (res['status'] === -1) {
+                        alertify.error(res['msg']);
+                    } else {
+                        let data = res.data;
+                        if (data['is_correct'] === true) {
+                            this.isPass = true;
+                            if (data['is_first'] === true) {
+                                this.isFirst = true;
+                            }
+                            this.updateStatus();
+                        } else {
+                            this.isFailed = true;
                         }
-                        this.updateStatus();
                     }
+                    input.val('');
                 });
             },
             updateStatus: function () {
                 if (this.isPass) {
-                    this.questStatus = 'is-primary';
+                    this.questStatus = 'is-correct';
                     if (this.isFirst) {
-                        // Do nothing now
+                        this.questStatus = 'is-first';
                     }
                 }
             }

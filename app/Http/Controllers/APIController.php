@@ -9,6 +9,7 @@ use App\User;
 use Cache;
 use Gravatar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Validator;
 
 class APIController extends Controller
@@ -51,14 +52,18 @@ class APIController extends Controller
     }
 
 
-    public function getQuest(Request $request)
+    public function getQuestData(Request $request)
     {
+        // 檢查是否登入(要有csrf_token)
+        if (!auth()->check()) {
+            return $this->APIReturn($this->status['Error'], null, 'Not login.');
+        }
         $contest = Contest::whereName(Cache::get('current_contest'))->first();
         if (!$contest->quests()->pluck('id')->contains($request->get('id'))) {
             return $this->APIReturn($this->status['Error'], null, 'No such quest exists.');
         } else {
-            $data = Quest::whereId($request->get('id'))->with(['attachments', 'records'])->first();
-            foreach ($data->attachments as $attachment) {
+            $quest = Quest::whereId($request->get('id'))->with('attachments')->first();
+            foreach ($quest->attachments as $attachment) {
                 $attachment->makeHidden([
                     'id',
                     'uuid',
@@ -73,11 +78,42 @@ class APIController extends Controller
                     'updated_at',
                 ]);
             }
-            $data->makeHidden(['contest_id', 'hidden', 'created_at', 'updated_at']);
-            return $this->APIReturn($this->status['Success'], $data, null);
+            $quest->makeHidden(['contest_id', 'hidden', 'created_at', 'updated_at']);
+
+            $records = $quest->records->groupBy('user_id');
+            $solved = 0;
+            foreach ($records as $user => $list) {
+                /** @var Collection $list */
+                if ($list->contains('is_correct', true)) {
+                    $solved += 1;
+                }
+            }
+            $is_correct = false;
+            $is_first = false;
+            /** @var Collection $record */
+            if ($records->count() > 0 && $records->has(auth()->id())) {
+                $record = $records->get(auth()->id());
+                if ($record->count() > 0) {
+                    /** @var Record $first */
+                    $first = $record->firstWhere('is_correct', '=', true);
+
+                    if ($first !== null) {
+                        $is_correct = $first->is_correct;
+                        $is_first = $first->is_first;
+                    }
+                }
+            }
+
+            $status = [
+                'solved'     => $solved,
+                'total'      => $contest->users->count(),
+                'is_correct' => $is_correct,
+                'is_first'   => $is_first,
+            ];
+
+            return $this->APIReturn($this->status['Success'], ['quest' => $quest, 'status' => $status], null);
         }
     }
-
 
     /**
      * Need Auth.
@@ -129,15 +165,16 @@ class APIController extends Controller
 
         // 檢查首殺
         if ($correct) {
-            $first = Record::whereQuestId($quest->id)->orderBy('created_at')->first();
-            if ($first === $record) {
+            $first = Record::whereQuestId($quest->id)->where('is_correct', '=', true)->orderBy('created_at')->first();
+            if ($first->id === $record->id) {
                 $record->update([
                     'is_first' => true,
                 ]);
             }
         }
+        $record->makeHidden('user_id');
 
-        return $this->APIReturn($this->status['Success'], ['correct' => true, 'first' => true], null);
+        return $this->APIReturn($this->status['Success'], $record, null);
     }
 
 }

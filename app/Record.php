@@ -37,6 +37,14 @@ class Record extends Model
         'is_first',
     ];
 
+    protected $hidden = [
+        'id',
+        'quest_id',
+        'flag',
+        'created_at',
+        'updated_at',
+    ];
+
     protected $casts = [
         'is_correct' => 'boolean',
         'is_first' => 'boolean',

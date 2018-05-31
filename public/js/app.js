@@ -32915,7 +32915,7 @@ exports = module.exports = __webpack_require__(16)(false);
 
 
 // module
-exports.push([module.i, "\n.corner {\n    position: absolute;\n    top: 0;\n    right: auto;\n    left: 0;\n    margin: 0;\n    padding: 0;\n    text-align: center;\n    border-color: gold;\n    width: 4em;\n    height: 4em;\n    z-index: 1;\n    -webkit-transition: border-color .1s ease;\n    transition: border-color .1s ease;\n    background-color: transparent !important;\n    color: rgba(0, 0, 0, 0.6);\n}\n", ""]);
+exports.push([module.i, "\n.corner {\n    position: absolute;\n    top: 0;\n    right: auto;\n    left: 0;\n    margin: 0;\n    padding: 0;\n    text-align: center;\n    border-color: gold;\n    width: 4em;\n    height: 4em;\n    z-index: 1;\n    -webkit-transition: border-color .1s ease;\n    transition: border-color .1s ease;\n    background-color: transparent !important;\n    color: rgba(0, 0, 0, 0.6);\n}\n.is-correct {\n    background-color: #00d1b2;\n    color: #fff;\n}\n.is-first {\n    background-color: goldenrod;\n    color: #fff;\n}\n", ""]);
 
 // exports
 
@@ -33441,6 +33441,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -33449,7 +33461,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             title: this.quest_title,
             point: this.quest_points
         };
-        this.fetch();
+        this.getData();
     },
     data: function data() {
         return {
@@ -33457,18 +33469,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             questStatus: 'is-link',
             quest: '',
             flag: '',
+            inputId: 'input_' + this.quest_id,
             isPass: false,
-            isFirst: true
+            isFirst: true,
+            solved: 0,
+            total: 0,
+            isFailed: false
         };
     },
-    props: ['api', 'submit_api', 'quest_id', 'quest_title', 'quest_points'],
+    props: ['data_api', 'status_api', 'submit_api', 'quest_id', 'quest_title', 'quest_points'],
     methods: {
-        fetch: function fetch() {
-            this.$http.post(this.api, { 'id': this.quest_id }).then(function (response) {
+        getData: function getData() {
+            this.$http.post(this.data_api, { 'id': this.quest_id, 'csrf-token': document.head.querySelector('meta[name="csrf-token"]').content }).then(function (response) {
                 var res = response.body;
-                this.quest = res.data;
-                if (res.status === -1) {
-                    alertify.error('獲取題目失敗');
+                if (res['status'] === -1) {
+                    alertify.error(res['msg']);
+                } else {
+                    var data = res.data;
+                    this.quest = data['quest'];
+                    this.solved = parseInt(data['status']['solved']);
+                    this.total = parseInt(data['status']['total']);
+                    this.isPass = data['status']['is_correct'];
+                    this.isFirst = data['status']['is_first'];
+                    this.updateStatus();
                 }
             });
         },
@@ -33477,24 +33500,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         inactive: function inactive() {
             this.isActive = false;
+            this.isFailed = false;
         },
         submitQuest: function submitQuest() {
-            this.$http.post(this.submit_api, { 'quest': this.quest_id, 'flag': '12345', 'csrf-token': document.head.querySelector('meta[name="csrf-token"]').content }).then(function (response) {
-                var data = response.body.data;
-                if (data.correct === true) {
-                    this.isPass = true;
-                    if (data.first === true) {
-                        this.isFirst = true;
+            var input = $('#' + this.inputId);
+            this.isFailed = false;
+            this.$http.post(this.submit_api, { 'quest': this.quest_id, 'flag': input.val(), 'csrf-token': document.head.querySelector('meta[name="csrf-token"]').content }).then(function (response) {
+                var res = response.body;
+                if (res['status'] === -1) {
+                    alertify.error(res['msg']);
+                } else {
+                    var data = res.data;
+                    if (data['is_correct'] === true) {
+                        this.isPass = true;
+                        if (data['is_first'] === true) {
+                            this.isFirst = true;
+                        }
+                        this.updateStatus();
+                    } else {
+                        this.isFailed = true;
                     }
-                    this.updateStatus();
                 }
+                input.val('');
             });
         },
         updateStatus: function updateStatus() {
             if (this.isPass) {
-                this.questStatus = 'is-primary';
+                this.questStatus = 'is-correct';
                 if (this.isFirst) {
-                    // Do nothing now
+                    this.questStatus = 'is-first';
                 }
             }
         }
@@ -33550,7 +33584,12 @@ var render = function() {
             _vm._v(" "),
             _c("p", { staticClass: "subtitle" }, [
               _vm._v(
-                "本題得分：" + _vm._s(this.quest["point"]) + "，已解人數：0"
+                "本題得分：" +
+                  _vm._s(this.quest["point"]) +
+                  "，解答狀況：" +
+                  _vm._s(this.solved) +
+                  " / " +
+                  _vm._s(this.total)
               )
             ]),
             _vm._v(" "),
@@ -33585,9 +33624,18 @@ var render = function() {
               ? _c("p", { staticClass: "has-text-centered has-text-info" }, [
                   _vm._v("你已經完成本題。")
                 ])
-              : _c("form", { staticStyle: { display: "inline" } }, [
+              : _c("div", { staticStyle: { display: "inline" } }, [
                   _c("div", { staticClass: "field has-addons" }, [
-                    _vm._m(1),
+                    _c("div", { staticClass: "control is-expanded" }, [
+                      _c("input", {
+                        staticClass: "input",
+                        attrs: {
+                          type: "text",
+                          placeholder: "Please enter your flag.",
+                          id: this.inputId
+                        }
+                      })
+                    ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "control" }, [
                       _c(
@@ -33597,11 +33645,28 @@ var render = function() {
                           attrs: { type: "button" },
                           on: { click: _vm.submitQuest }
                         },
-                        [_vm._m(2), _vm._v(" "), _c("span", [_vm._v("送出")])]
+                        [_vm._m(1), _vm._v(" "), _c("span", [_vm._v("送出")])]
                       )
                     ])
                   ])
-                ])
+                ]),
+            _vm._v(" "),
+            _vm.isFailed
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "notification is-danger",
+                    staticStyle: { "margin-top": "20px" }
+                  },
+                  [
+                    _c(
+                      "p",
+                      { staticClass: "has-text-centered has-text-weight-bold" },
+                      [_vm._v("Wrong Flag!")]
+                    )
+                  ]
+                )
+              : _vm._e()
           ],
           2
         )
@@ -33627,17 +33692,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "icon" }, [
       _c("i", { staticClass: "far fa-download" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "control is-expanded" }, [
-      _c("input", {
-        staticClass: "input",
-        attrs: { type: "text", placeholder: "Please enter your flag." }
-      })
     ])
   },
   function() {
