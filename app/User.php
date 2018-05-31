@@ -94,4 +94,5 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Contest', 'user_contest');
     }
+
 }
