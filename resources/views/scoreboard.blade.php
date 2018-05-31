@@ -4,10 +4,10 @@
 
 @section('content')
     <h1 class="has-text-centered is-1 title">記分板</h1>
-    <div class="chart-container" style="position: relative; height:100px; width:100%;">
+    {{--<div class="chart-container" style="position: relative; height:100px; width:100%;">--}}
         {{--<canvas id="scoreboard"></canvas>--}}
-        <p class="has-text-centered">Scoreboard chart is not available, coming soon...</p>
-    </div>
+        {{--<p class="has-text-centered">Scoreboard chart is not available, coming soon...</p>--}}
+    {{--</div>--}}
 
     <table class="table is-hoverable is-fullwidth is-striped">
         <thead>
@@ -18,7 +18,7 @@
         </tr>
         </thead>
         <tbody>
-        @php($i=0)
+        @php($i=1)
         @foreach($scores as $name => $score)
             <tr>
                 <td>{{ $i }}</td>
