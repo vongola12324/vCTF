@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function() {
     Route::get('join', 'FrontController@showJoinContestPage')->name('join.contest.page');
     Route::post('join', 'FrontController@joinContest')->name('join.contest');
     Route::prefix('manage')->group(function() {
+        Route::resource('user', 'UserController');
         Route::resource('contest', 'ContestController')->except(['show']);
         Route::prefix('contest/{contest}')->group(function() {
             Route::post('change', 'ContestController@change')->name('contest.change');

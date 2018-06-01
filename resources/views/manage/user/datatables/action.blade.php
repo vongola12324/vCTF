@@ -1,0 +1,1 @@
+<a class="button is-primary" href="{{ route('user.show', $id) }}"><span class="icon"><i class="far fa-search"></i></span></a>

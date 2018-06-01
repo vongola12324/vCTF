@@ -151,6 +151,7 @@ return [
                 "code.jquery.com",
                 'maxcdn.bootstrapcdn.com',
                 "cdnjs.cloudflare.com",
+                "cdn.datatables.net",
             ],
 
             'hashes' => [
@@ -186,6 +187,7 @@ return [
                 "cdn.jsdelivr.net",
                 'maxcdn.bootstrapcdn.com',
                 "fonts.googleapis.com",
+                "cdn.datatables.net",
             ],
 
             'hashes' => [
@@ -211,6 +213,7 @@ return [
         'img-src' => [
             'allow'   => [
                 "secure.gravatar.com",
+                "cdn.datatables.net",
             ],
             'schemes' => [
                 "data:",

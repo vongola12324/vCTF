@@ -34,6 +34,7 @@ class GenerateMenus
                 $user = auth()->user();
                 if (\Laratrust::can('menu.view')) {
                     $adminMenu = $menu->add('管理選單', 'javascript:void(0)');
+                    $adminMenu->add('隊伍管理', ['route' => 'user.index']);
                     $adminMenu->add('競賽管理', ['route' => 'contest.index']);
                     $adminMenu->add('紀錄檢視器', ['route' => 'log-viewer::dashboard', 'target' => '_blank', 'external' => true]);
                 }
