@@ -36,6 +36,7 @@
     "predis/predis": "^1.1",
     "recca0120/laravel-tracy": "^1.8",
     "santigarcor/laratrust": "^5.0",
+    "shahonseven/php-color-hash": "dev-master",
     "spatie/laravel-backup": "^5.4",
     "spatie/laravel-html": "^2.19",
     "thomaswelton/laravel-gravatar": "^1.1",

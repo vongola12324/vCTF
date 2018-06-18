@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "252f09c2468b1a7789c618bb922fa647",
+    "content-hash": "1340c11554b13074cedb8c1f1b2f713f",
     "packages": [
         {
             "name": "arcanedev/log-viewer",
@@ -2873,6 +2873,42 @@
                 "roles"
             ],
             "time": "2018-03-05T13:21:52+00:00"
+        },
+        {
+            "name": "shahonseven/php-color-hash",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shahonseven/php-color-hash.git",
+                "reference": "877eff4f605bf1c8602adb1b2b566f0a2d470aa3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shahonseven/php-color-hash/zipball/877eff4f605bf1c8602adb1b2b566f0a2d470aa3",
+                "reference": "877eff4f605bf1c8602adb1b2b566f0a2d470aa3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Shahonseven": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shahril Abdullah",
+                    "email": "shahonseven@gmail.com"
+                }
+            ],
+            "description": "Generate color based on the given string. Backported from the Javascript library color-hash",
+            "time": "2017-09-08T18:00:07+00:00"
         },
         {
             "name": "spatie/db-dumper",
@@ -6532,6 +6568,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "shahonseven/php-color-hash": 20,
         "yajra/laravel-datatables-buttons": 20
     },
     "prefer-stable": true,

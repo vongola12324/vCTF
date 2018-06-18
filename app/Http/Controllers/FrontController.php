@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Charts\ScoreChart;
 use App\Contest;
 use App\Quest;
 use App\User;
 use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Debug\Dumper;
 
 class FrontController extends Controller
 {
@@ -50,19 +52,29 @@ class FrontController extends Controller
         }
         $users = $this->contest->users()->with('records.quest')->get();
         $scores = [];
+        $colorHash = new \Shahonseven\ColorHash();
+        $chart = new ScoreChart;
         foreach ($users as $user) {
             /** @var Collection $records */
             $records = $user->records->filter(function ($value, $key) {
                 return $value->is_correct;
             })->groupBy('quest_id');
-            $sum = $records->sum(function ($i) {
-                /** @var Collection $i */
-                return $i->first()->point;
-            });
-            $scores = array_merge($scores, [$user->name => $sum]);
+            $tmp = [0 => ['x' => 0, 'y' => 0]];
+            $i = 1;
+            foreach ($records as $record_list) {
+                $record = $record_list->first();
+                array_push($tmp, ['x' => $i, 'y' => $tmp[$i - 1]['y'] + $record->point]);
+                $i += 1;
+            }
+            $scores = array_merge($scores, [$user->name => end($tmp)['y']]);
+            $chart->labels(['A', 'B'])->dataset($user->name, 'scatter', $tmp)->options([
+                'fill'        => false,
+                'lineTension' => 0,
+                'showLine'    => true,
+                'borderColor' => $colorHash->hex($user->name),
+            ]);
         }
-        $scores = collect($scores)->sort()->reverse();
-        return view('scoreboard', compact('users', 'scores'));
+        return view('scoreboard', compact('users', 'scores', 'chart'));
     }
 
     public function showJoinContestPage()
