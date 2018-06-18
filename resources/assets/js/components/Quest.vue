@@ -19,8 +19,24 @@
                         <span class="icon"><i class="far fa-download"></i></span>
                         <span>{{ attachment.filename }}</span>
                     </a>
-                    <hr style="margin-top: 10px;">
-                    <p v-if="isPass" class="has-text-centered has-text-info">你已經完成本題。</p>
+                    <template v-if="unlockHints.length > 0 && !isPass">
+                        <hr style="margin-top: 10px; margin-bottom: 10px;">
+                        <h3 class="title is-4" style="margin-bottom: 5px;">本題有提示：</h3>
+                        <ul :id="this.quest_id + '_hint_list'" style="margin-bottom: 5px;list-style: disc;padding-left: 2em;">
+                            <li v-for="hint in unlockHints" v-if="hint.content !== null">
+                                {{ hint.content }}
+                            </li>
+                        </ul>
+                        <button v-for="hint in unlockHints" v-if="hint.content === null" class="button is-warning" style="margin-right: 5px;" @click="unlockHint(hint.id)" :id="'unlock_hint_' + hint.id">
+                            <span class="icon"><i class="far fa-unlock"></i></span>
+                            <span v-if="hint.point === 0">Unlock Hint</span>
+                            <span v-else>Unlock Hint (-{{ hint.point }})</span>
+                        </button>
+                    </template>
+                    <hr style="margin-top: 10px; margin-bottom: 10px;">
+                    <div class="notification is-primary" v-if="isPass" style="padding-top: 10px;padding-bottom: 10px;">
+                        <p class="has-text-centered has-text-weight-bold">你已經完成本題。</p>
+                    </div>
                     <div style="display: inline" v-else>
                         <div class="field has-addons">
                             <div class="control is-expanded">
@@ -34,7 +50,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="notification is-danger" v-if="isFailed" style="margin-top: 20px;">
+                    <div class="notification is-danger" v-if="isFailed" style="margin-top: 10px;padding-top: 10px;padding-bottom: 10px;">
                         <p class="has-text-centered has-text-weight-bold">Wrong Flag!</p>
                     </div>
                 </div>
@@ -95,12 +111,14 @@
                 solved: 0,
                 total: 0,
                 isFailed: false,
+                unlockHints: []
             }
         },
         props: [
             'data_api',
             'status_api',
             'submit_api',
+            'hint_api',
             'quest_id',
             'quest_title',
             'quest_points'
@@ -118,6 +136,7 @@
                         this.total = parseInt(data['status']['total']);
                         this.isPass = data['status']['is_correct'];
                         this.isFirst = data['status']['is_first'];
+                        this.unlockHints = data['unlock_hints'];
                         this.updateStatus();
                     }
                 });
@@ -149,6 +168,19 @@
                         }
                     }
                     input.val('');
+                });
+            },
+            unlockHint: function (id) {
+                var that = this;
+                this.$http.post(this.hint_api, {'quest': this.quest_id, 'hint': id, 'csrf-token': document.head.querySelector('meta[name="csrf-token"]').content}).then(function (response) {
+                    let res = response.body;
+                    if (res['status'] === -1) {
+                        alertify.error(res['msg']);
+                    } else {
+                        let data = res.data;
+                        $('ul#'+ that.quest_id +'_hint_list').append('<li>'+ data.content + '</li>');
+                        $('button#unlock_hint_' + id).remove();
+                    }
                 });
             },
             updateStatus: function () {

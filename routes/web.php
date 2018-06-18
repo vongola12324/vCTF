@@ -17,6 +17,7 @@ Route::middleware('auth')->group(function() {
     Route::get('team', 'FrontController@team')->name('team');
     Route::get('challenge', 'FrontController@quest')->name('challenge');
     Route::post('challenge/api', 'APIController@getQuestData')->name('challenge.api');
+    Route::post('challenge/hint', 'APIController@unlockHint')->name('challenge.hint');
     Route::post('challenge/submit', 'APIController@submitQuest')->name('challenge.submit');
     Route::get('scoreboard', 'FrontController@scoreboard')->name('scoreboard');
     Route::get('join', 'FrontController@showJoinContestPage')->name('join.contest.page');
@@ -31,6 +32,7 @@ Route::middleware('auth')->group(function() {
                 Route::get('file-upload', 'QuestController@showUploadPage')->name('quest.upload.page');
                 Route::post('file-upload', 'QuestController@uploadFile')->name('quest.upload');
                 Route::delete('file-delete', 'QuestController@deleteFile')->name('quest.file.delete');
+                Route::resource('hint', 'HintController')->except(['show']);
             });
         });
     });

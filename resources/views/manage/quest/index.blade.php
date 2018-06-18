@@ -52,6 +52,10 @@
                                             <span class="icon"><i class="far fa-upload"></i></span>
                                             <span>上傳檔案</span>
                                         </a>
+                                        <a class="button is-link is-rounded" href="{{ route('hint.index', [$contest, $quest]) }}" style="margin-bottom: 0;">
+                                            <span class="icon"><i class="far fa-edit"></i></span>
+                                            <span>編輯提示</span>
+                                        </a>
                                     </div>
                                 </div>
                                 <button class="modal-close is-large" aria-label="close" @click.prevent="inactive"></button>
@@ -61,7 +65,17 @@
                 </div>
             @endforeach
         </div>
+    @else
+        <div class="notification is-warning" style="margin-top: 20px;">
+            <p class="has-text-centered has-text-weight-bold">沒有任何題目，快新增一個吧！</p>
+        </div>
     @endif
+    <div class="box has-text-centered" style="border: none; box-shadow: none;">
+        <a class="button is-link is-rounded" href="{{ route('contest.index') }}" style="margin-bottom: 0;">
+            <span class="icon"><i class="far fa-arrow-left"></i></span>
+            <span>返回競賽列表</span>
+        </a>
+    </div>
 @endsection
 
 @section('js')

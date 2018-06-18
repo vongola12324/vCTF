@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Contest;
+use App\Hint;
 use App\Quest;
 use App\Record;
+use App\Services\QuestService;
 use App\User;
 use Cache;
 use Gravatar;
@@ -18,6 +20,12 @@ class APIController extends Controller
         'Error'   => -1,
         'Success' => 1,
     ];
+    protected $questService;
+
+    public function __construct(QuestService $questService)
+    {
+        $this->questService = $questService;
+    }
 
     /**
      * @param int $status
@@ -58,6 +66,8 @@ class APIController extends Controller
         if (!auth()->check()) {
             return $this->APIReturn($this->status['Error'], null, 'Not login.');
         }
+        /** @var  User $user */
+        $user = auth()->user();
         $contest = Contest::whereName(Cache::get('current_contest'))->first();
         if (!$contest->quests()->pluck('id')->contains($request->get('id'))) {
             return $this->APIReturn($this->status['Error'], null, 'No such quest exists.');
@@ -82,7 +92,7 @@ class APIController extends Controller
 
             $records = $quest->records->groupBy('user_id');
             $solved = 0;
-            foreach ($records as $user => $list) {
+            foreach ($records as $list) {
                 /** @var Collection $list */
                 if ($list->contains('is_correct', true)) {
                     $solved += 1;
@@ -104,6 +114,17 @@ class APIController extends Controller
                 }
             }
 
+            $unlock_hints = [];
+            foreach ($quest->hints as $hint) {
+                /** @var Hint $hint */
+                if ($hint->users->pluck('id')->contains($user->id)) {
+                    array_push($unlock_hints, ['id' => $hint->id, 'content' => $hint->content, 'point' => 0]);
+                } else {
+                    array_push($unlock_hints, ['id' => $hint->id, 'content' => null, 'point' => $hint->point]);
+                }
+            }
+            $unlock_hints = collect($unlock_hints)->sortByDesc('content');
+
             $status = [
                 'solved'     => $solved,
                 'total'      => $contest->users->count(),
@@ -111,7 +132,8 @@ class APIController extends Controller
                 'is_first'   => $is_first,
             ];
 
-            return $this->APIReturn($this->status['Success'], ['quest' => $quest, 'status' => $status], null);
+            return $this->APIReturn($this->status['Success'],
+                ['quest' => $quest, 'status' => $status, 'unlock_hints' => $unlock_hints], null);
         }
     }
 
@@ -150,31 +172,54 @@ class APIController extends Controller
 
         // 檢查flag
         $flag = $request->get('flag');
-        $correct = false;
-        if ($quest->flag_type === FLAG_REGEX) {
-            $correct = preg_match($quest->flag, $flag) === 1;
-        } else {
-            $correct = $flag === $quest->flag;
-        }
+        $status = $this->questService->judge($quest, $flag, $user->id);
+
         $record = Record::create([
             'quest_id'   => $quest->id,
             'user_id'    => $user->id,
             'flag'       => $flag,
-            'is_correct' => $correct,
+            'is_correct' => $status['is_correct'],
+            'point'      => $status['point'],
         ]);
 
         // 檢查首殺
-        if ($correct) {
-            $first = Record::whereQuestId($quest->id)->where('is_correct', '=', true)->orderBy('created_at')->first();
-            if ($first->id === $record->id) {
-                $record->update([
-                    'is_first' => true,
-                ]);
-            }
+        if ($status['is_correct']) {
+            $this->questService->checkFirst($quest, $record);
         }
         $record->makeHidden('user_id');
 
         return $this->APIReturn($this->status['Success'], $record, null);
+    }
+
+    public function unlockHint(Request $request)
+    {
+        // 確定方式
+        if (!$request->ajax()) {
+            return $this->APIReturn($this->status['Error'], null, 'Unsupported.');
+        }
+        // 檢查是否登入(要有csrf_token)
+        if (!auth()->check()) {
+            return $this->APIReturn($this->status['Error'], null, 'Not login.');
+        }
+        $user = auth()->user();
+        // 驗證資料
+        $validator = Validator::make($request->all(), [
+            'quest' => 'required|integer|exists:quests,id',
+            'hint'  => 'required|integer|exists:hints,id',
+        ]);
+        $hint = Hint::whereId($request->get('hint'))->whereQuestId($request->get('quest'))->with('users')->first();
+        if ($validator->fails() || $hint === null) {
+            return $this->APIReturn($this->status['Error'], null, 'Invalid data.');
+        }
+
+        // 確認沒有關聯
+        if ($hint->users->pluck('id')->contains($user->id)) {
+            return $this->APIReturn($this->status['Error'], null, 'The hint has been unlock.');
+        }
+
+        // 驗證完畢，將用戶加入Hint關聯，並回傳該Hint
+        $hint->users()->attach($user);
+        return $this->APIReturn($this->status['Success'], $hint, null);
     }
 
 }

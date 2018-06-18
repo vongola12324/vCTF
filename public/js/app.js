@@ -33453,6 +33453,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -33474,10 +33490,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             isFirst: true,
             solved: 0,
             total: 0,
-            isFailed: false
+            isFailed: false,
+            unlockHints: []
         };
     },
-    props: ['data_api', 'status_api', 'submit_api', 'quest_id', 'quest_title', 'quest_points'],
+    props: ['data_api', 'status_api', 'submit_api', 'hint_api', 'quest_id', 'quest_title', 'quest_points'],
     methods: {
         getData: function getData() {
             this.$http.post(this.data_api, { 'id': this.quest_id, 'csrf-token': document.head.querySelector('meta[name="csrf-token"]').content }).then(function (response) {
@@ -33491,6 +33508,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     this.total = parseInt(data['status']['total']);
                     this.isPass = data['status']['is_correct'];
                     this.isFirst = data['status']['is_first'];
+                    this.unlockHints = data['unlock_hints'];
                     this.updateStatus();
                 }
             });
@@ -33522,6 +33540,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 }
                 input.val('');
+            });
+        },
+        unlockHint: function unlockHint(id) {
+            var that = this;
+            this.$http.post(this.hint_api, { 'quest': this.quest_id, 'hint': id, 'csrf-token': document.head.querySelector('meta[name="csrf-token"]').content }).then(function (response) {
+                var res = response.body;
+                if (res['status'] === -1) {
+                    alertify.error(res['msg']);
+                } else {
+                    var data = res.data;
+                    $('ul#' + that.quest_id + '_hint_list').append('<li>' + data.content + '</li>');
+                    $('button#unlock_hint_' + id).remove();
+                }
             });
         },
         updateStatus: function updateStatus() {
@@ -33618,12 +33649,100 @@ var render = function() {
                 : _vm._e()
             }),
             _vm._v(" "),
-            _c("hr", { staticStyle: { "margin-top": "10px" } }),
+            _vm.unlockHints.length > 0 && !_vm.isPass
+              ? [
+                  _c("hr", {
+                    staticStyle: {
+                      "margin-top": "10px",
+                      "margin-bottom": "10px"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "h3",
+                    {
+                      staticClass: "title is-4",
+                      staticStyle: { "margin-bottom": "5px" }
+                    },
+                    [_vm._v("本題有提示：")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "ul",
+                    {
+                      staticStyle: {
+                        "margin-bottom": "5px",
+                        "list-style": "disc",
+                        "padding-left": "2em"
+                      },
+                      attrs: { id: this.quest_id + "_hint_list" }
+                    },
+                    _vm._l(_vm.unlockHints, function(hint) {
+                      return hint.content !== null
+                        ? _c("li", [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(hint.content) +
+                                "\n                        "
+                            )
+                          ])
+                        : _vm._e()
+                    })
+                  ),
+                  _vm._v(" "),
+                  _vm._l(_vm.unlockHints, function(hint) {
+                    return hint.content === null
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "button is-warning",
+                            staticStyle: { "margin-right": "5px" },
+                            attrs: { id: "unlock_hint_" + hint.id },
+                            on: {
+                              click: function($event) {
+                                _vm.unlockHint(hint.id)
+                              }
+                            }
+                          },
+                          [
+                            _vm._m(1, true),
+                            _vm._v(" "),
+                            hint.point === 0
+                              ? _c("span", [_vm._v("Unlock Hint")])
+                              : _c("span", [
+                                  _vm._v(
+                                    "Unlock Hint (-" + _vm._s(hint.point) + ")"
+                                  )
+                                ])
+                          ]
+                        )
+                      : _vm._e()
+                  })
+                ]
+              : _vm._e(),
+            _vm._v(" "),
+            _c("hr", {
+              staticStyle: { "margin-top": "10px", "margin-bottom": "10px" }
+            }),
             _vm._v(" "),
             _vm.isPass
-              ? _c("p", { staticClass: "has-text-centered has-text-info" }, [
-                  _vm._v("你已經完成本題。")
-                ])
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "notification is-primary",
+                    staticStyle: {
+                      "padding-top": "10px",
+                      "padding-bottom": "10px"
+                    }
+                  },
+                  [
+                    _c(
+                      "p",
+                      { staticClass: "has-text-centered has-text-weight-bold" },
+                      [_vm._v("你已經完成本題。")]
+                    )
+                  ]
+                )
               : _c("div", { staticStyle: { display: "inline" } }, [
                   _c("div", { staticClass: "field has-addons" }, [
                     _c("div", { staticClass: "control is-expanded" }, [
@@ -33645,7 +33764,7 @@ var render = function() {
                           attrs: { type: "button" },
                           on: { click: _vm.submitQuest }
                         },
-                        [_vm._m(1), _vm._v(" "), _c("span", [_vm._v("送出")])]
+                        [_vm._m(2), _vm._v(" "), _c("span", [_vm._v("送出")])]
                       )
                     ])
                   ])
@@ -33656,7 +33775,11 @@ var render = function() {
                   "div",
                   {
                     staticClass: "notification is-danger",
-                    staticStyle: { "margin-top": "20px" }
+                    staticStyle: {
+                      "margin-top": "10px",
+                      "padding-top": "10px",
+                      "padding-bottom": "10px"
+                    }
                   },
                   [
                     _c(
@@ -33692,6 +33815,14 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "icon" }, [
       _c("i", { staticClass: "far fa-download" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "icon" }, [
+      _c("i", { staticClass: "far fa-unlock" })
     ])
   },
   function() {

@@ -35,6 +35,7 @@ class Record extends Model
         'flag',
         'is_correct',
         'is_first',
+        'point'
     ];
 
     protected $hidden = [

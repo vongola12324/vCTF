@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Bnb\Laravel\Attachments\Attachment[] $attachments
  * @property-read \App\Contest $contest
  * @property-read mixed $content_html
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Hint[] $hints
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Record[] $records
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Quest whereCategory($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Quest whereContent($value)
@@ -78,6 +79,11 @@ class Quest extends Model
     public function records()
     {
         return $this->hasMany('App\Record');
+    }
+
+    public function hints()
+    {
+        return $this->hasMany('App\Hint');
     }
 
     public function getContentHtmlAttribute()

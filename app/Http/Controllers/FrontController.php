@@ -7,7 +7,7 @@ use App\Quest;
 use App\User;
 use Cache;
 use Illuminate\Http\Request;
-use Lavary\Menu\Collection;
+use Illuminate\Support\Collection;
 
 class FrontController extends Controller
 {
@@ -51,13 +51,10 @@ class FrontController extends Controller
         $users = $this->contest->users()->with('records.quest')->get();
         $scores = [];
         foreach ($users as $user) {
-            $records = $user->records->filter(function($value, $key){
+            /** @var Collection $records */
+            $records = $user->records->filter(function ($value, $key) {
                 return $value->is_correct;
             })->groupBy('quest_id');
-            $s = $records->sum(function ($record) {
-                $point = $record[0]->quest->point;
-                return $record[0]->is_correct ? ($record[0]->is_first ? $point * 1.1 : $point) : 0;
-            });
             $scores = array_merge($scores, [$user->name => $s]);
         }
         $scores = collect($scores)->sort()->reverse();
