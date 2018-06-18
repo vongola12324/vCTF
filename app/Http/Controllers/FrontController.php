@@ -55,7 +55,11 @@ class FrontController extends Controller
             $records = $user->records->filter(function ($value, $key) {
                 return $value->is_correct;
             })->groupBy('quest_id');
-            $scores = array_merge($scores, [$user->name => $s]);
+            $sum = $records->sum(function ($i) {
+                /** @var Collection $i */
+                return $i->first()->point;
+            });
+            $scores = array_merge($scores, [$user->name => $sum]);
         }
         $scores = collect($scores)->sort()->reverse();
         return view('scoreboard', compact('users', 'scores'));
