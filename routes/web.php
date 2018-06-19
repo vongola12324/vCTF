@@ -23,6 +23,9 @@ Route::middleware('auth')->group(function() {
     Route::get('join', 'FrontController@showJoinContestPage')->name('join.contest.page');
     Route::post('join', 'FrontController@joinContest')->name('join.contest');
     Route::prefix('manage')->group(function() {
+        Route::get('profile', 'ProfileController@index')->name('profile');
+        Route::get('profile/edit', 'ProfileController@edit')->name('profile.edit');
+        Route::patch('profile/edit', 'ProfileController@update')->name('profile.update');
         Route::resource('user', 'UserController');
         Route::resource('contest', 'ContestController')->except(['show']);
         Route::prefix('contest/{contest}')->group(function() {

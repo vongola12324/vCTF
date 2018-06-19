@@ -40,7 +40,7 @@ class GenerateMenus
                 }
                 $userMenu = $menu->add('<img src="'.Gravatar::src($user->email, 32).'" class="image is-32x32" style="border-radius: 50%;">', 'javascript:void(0)');
                 $userMenu->add('<strong>' . $user->name . '</strong>', 'javascript:void(0)')->divide( ['class' => 'navbar-divider'] );
-//                $userMenu->add('個人資料', ['route' => 'profile']);
+                $userMenu->add('個人資料', ['route' => 'profile']);
                 $userMenu->add('登出', ['route' => 'logout']);
             } else {
                 $menu->add('登入', ['route' => 'login']);
