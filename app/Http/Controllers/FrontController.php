@@ -94,7 +94,7 @@ class FrontController extends Controller
         } else {
             /** @var User $user */
             $user = auth()->user();
-            $user->contests()->attach($this->contest);
+            $user->contests()->attach($this->contest, ['is_admin' => false, 'is_hidden' => false]);
             return redirect()->route('challenge')->with('success', '成功參加競賽！');
         }
     }
