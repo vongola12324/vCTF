@@ -37,6 +37,9 @@ Route::middleware('auth')->group(function() {
                 Route::delete('file-delete', 'QuestController@deleteFile')->name('quest.file.delete');
                 Route::resource('hint', 'HintController')->except(['show']);
             });
+            Route::get('users', 'ContestController@getUsersPage')->name('contest.user.page');
+            Route::patch('users/set-admin', 'ContestController@setUserAdmin')->name('contest.user.admin');
+            Route::patch('users/set-hidden', 'ContestController@setUserHidden')->name('contest.user.hidden');
         });
     });
 });

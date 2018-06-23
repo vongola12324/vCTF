@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contest;
 use App\Setting;
+use App\User;
 use Cache;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -36,6 +37,7 @@ class ContestController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -45,31 +47,22 @@ class ContestController extends Controller
             'start_at'     => 'nullable|date',
             'end_at'       => 'nullable|date',
         ]);
-        Contest::create([
+        $contest = Contest::create([
             'name'         => uuid_v4_base64(),
             'display_name' => $request->get('display_name'),
             'start_at'     => Carbon::parse($request->get('start_at')),
             'end_at'       => Carbon::parse($request->get('end_at')),
         ]);
+        $contest->users()->attach(auth()->id(), ['is_admin' => true, 'is_hidden' => true]);
 
         return redirect()->route('contest.index')->with('success', '競賽建立成功！');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Contest $contest
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Contest $contest)
-    {
-        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Contest $contest
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Contest $contest)
@@ -83,6 +76,7 @@ class ContestController extends Controller
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \App\Contest $contest
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Contest $contest)
@@ -105,6 +99,7 @@ class ContestController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Contest $contest
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Contest $contest)
@@ -124,5 +119,49 @@ class ContestController extends Controller
         $current->update(['data' => $contest->name]);
         Cache::forever('current_contest', $current->value);
         return redirect()->route('contest.index')->with('success', '競賽切換成功！');
+    }
+
+    public function getUsersPage(Contest $contest)
+    {
+        $users = $contest->users()->paginate();
+
+        return view('manage.contest.users', compact('contest', 'users'));
+    }
+
+    public function setUserAdmin(Request $request, Contest $contest)
+    {
+        $this->validate($request, [
+            'user_id'   => 'required|integer|exists:users,id|exists:user_contest,user_id',
+        ]);
+
+        $user = User::whereId($request->get('user_id'))->first();
+        $current = $contest->users()->wherePivot('user_id', $user->id)->first()->pivot->is_admin;
+
+        try {
+            $contest->users()->updateExistingPivot($user->id, ['is_admin' => !$current]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('warning', '參賽者屬性更新失敗！');
+        }
+
+        return redirect()->back()->with('success', '參賽者屬性更新成功！');
+    }
+
+    public function setUserHidden(Request $request, Contest $contest)
+    {
+        $this->validate($request, [
+            'user_id'   => 'required|integer|exists:users,id|exists:user_contest,user_id',
+        ]);
+
+        $user = User::whereId($request->get('user_id'))->first();
+        $current = $contest->users()->wherePivot('user_id', $user->id)->first()->pivot->is_hidden;
+
+        try {
+            $contest->users()->updateExistingPivot($user->id, ['is_hidden' => !$current]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('warning', '參賽者屬性更新失敗！');
+        }
+
+
+        return redirect()->back()->with('success', '參賽者屬性更新成功！');
     }
 }

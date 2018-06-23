@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('css/fontawesome-all.min.css') }}">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css"/>
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="{{ asset('css/bulma-extensions.min.css ') }}">
     @yield('css')
 </head>
 <body class="is-fullheight">

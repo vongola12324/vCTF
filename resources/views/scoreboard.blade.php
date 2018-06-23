@@ -4,30 +4,40 @@
 
 @section('content')
     <h1 class="has-text-centered is-1 title">記分板</h1>
-    <div>{!! $chart->container() !!}</div>
+    @if($chart !== null)
+        <div>{!! $chart->container() !!}</div>
+    @endif
 
-    <table class="table is-hoverable is-fullwidth is-striped">
-        <thead>
-        <tr>
-            <th>名次</th>
-            <th>名稱</th>
-            <th>分數</th>
-        </tr>
-        </thead>
-        <tbody>
-        @php($i=1)
-        @foreach($scores as $name => $score)
+    @if(count($scores) === 0)
+        <div class="notification is-warning" style="margin-top: 20px;">
+            <p class="has-text-centered has-text-weight-bold">沒有任何參賽者！</p>
+        </div>
+    @else
+        <table class="table is-hoverable is-fullwidth is-striped">
+            <thead>
             <tr>
-                <td>{{ $i }}</td>
-                <td>{{ $name }}</td>
-                <td>{{ $score }}</td>
+                <th>名次</th>
+                <th>名稱</th>
+                <th>分數</th>
             </tr>
-        @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            @php($i=1)
+            @foreach($scores as $name => $score)
+                <tr>
+                    <td>{{ $i }}</td>
+                    <td>{{ $name }}</td>
+                    <td>{{ $score }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    @endif
 @endsection
 
 @section('js')
     <script src="//cdn.jsdelivr.net/npm/chart.js@2.7.2/dist/Chart.min.js"></script>
-    {!! $chart->script() !!}
+    @if($chart !== null)
+        {!! $chart->script() !!}
+    @endif
 @endsection

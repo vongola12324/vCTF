@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contest;
 use App\Role;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -85,6 +86,7 @@ class RegisterController extends Controller
             'register_at' => Carbon::now(),
             'register_ip' => $request->ip(),
         ]);
+        $user->contests()->attach(Contest::whereName('Public')->first()->id, ['is_admin' => false, 'is_hidden' => false]);
         if ($user->id === 1) {
             $user->attachRole(Role::whereName('Admin')->first());
         }

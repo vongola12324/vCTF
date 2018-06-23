@@ -32915,7 +32915,7 @@ exports = module.exports = __webpack_require__(16)(false);
 
 
 // module
-exports.push([module.i, "\n.corner {\n    position: absolute;\n    top: 0;\n    right: auto;\n    left: 0;\n    margin: 0;\n    padding: 0;\n    text-align: center;\n    border-color: gold;\n    width: 4em;\n    height: 4em;\n    z-index: 1;\n    -webkit-transition: border-color .1s ease;\n    transition: border-color .1s ease;\n    background-color: transparent !important;\n    color: rgba(0, 0, 0, 0.6);\n}\n.is-correct {\n    background-color: #00d1b2;\n    color: #fff;\n}\n.is-first {\n    background-color: goldenrod;\n    color: #fff;\n}\n", ""]);
+exports.push([module.i, "\n.corner {\n    position: absolute;\n    top: 0;\n    right: auto;\n    left: 0;\n    margin: 0;\n    padding: 0 0 0 5px;\n    border-color: gold;\n    width: 4em;\n    height: 4em;\n    z-index: 1;\n    -webkit-transition: border-color .1s ease;\n    transition: border-color .1s ease;\n    background-color: transparent !important;\n    color: gold;\n}\n.is-correct {\n    background-color: #00d1b2;\n    color: #fff;\n}\n.is-first {\n    background-color: #00d1b2;\n    color: #fff;\n}\n", ""]);
 
 // exports
 
@@ -33378,7 +33378,6 @@ module.exports = function normalizeComponent (
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
 //
 //
 //

@@ -53,6 +53,6 @@ class Contest extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\User', 'user_contest');
+        return $this->belongsToMany('App\User', 'user_contest')->withPivot(['is_admin', 'is_hidden'])->using('App\Pivots\UserContest');
     }
 }

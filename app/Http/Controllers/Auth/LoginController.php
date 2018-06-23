@@ -55,7 +55,6 @@ class LoginController extends Controller
             'last_login_at' => Carbon::now(),
             'last_login_ip' => $request->ip(),
         ]);
-        $user->contests()->attach(Contest::whereName('Public')->first());
         return;
     }
 

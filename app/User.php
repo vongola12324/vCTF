@@ -92,7 +92,7 @@ class User extends Authenticatable
 
     public function contests()
     {
-        return $this->belongsToMany('App\Contest', 'user_contest');
+        return $this->belongsToMany('App\Contest', 'user_contest')->withPivot(['is_admin', 'is_hidden'])->using('App\Pivots\UserContest');
     }
 
 }

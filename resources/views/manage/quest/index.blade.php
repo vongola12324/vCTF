@@ -75,6 +75,10 @@
             <span class="icon"><i class="far fa-arrow-left"></i></span>
             <span>返回競賽列表</span>
         </a>
+        <a class="button is-link is-rounded" href="{{ route('contest.user.page', $contest) }}" style="margin-bottom: 0;">
+            <span class="icon"><i class="far fa-users-cog"></i></span>
+            <span>參賽者管理</span>
+        </a>
     </div>
 @endsection
 

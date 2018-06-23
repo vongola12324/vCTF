@@ -50,30 +50,35 @@ class FrontController extends Controller
         if (!$this->isJoinContest()) {
             return redirect()->route('join.contest.page');
         }
-        $users = $this->contest->users()->with('records.quest')->get();
+        $users = $this->contest->users()->with('records.quest')->wherePivot('is_hidden', false)->get();
         $scores = [];
-        $colorHash = new \Shahonseven\ColorHash();
-        $chart = new ScoreChart;
-        foreach ($users as $user) {
-            /** @var Collection $records */
-            $records = $user->records->filter(function ($value, $key) {
-                return $value->is_correct;
-            })->groupBy('quest_id');
-            $tmp = [0 => ['x' => 0, 'y' => 0]];
-            $i = 1;
-            foreach ($records as $record_list) {
-                $record = $record_list->first();
-                array_push($tmp, ['x' => $i, 'y' => $tmp[$i - 1]['y'] + $record->point]);
-                $i += 1;
+        if ($users->count() === 0) {
+            $chart = null;
+        } else {
+            $colorHash = new \Shahonseven\ColorHash();
+            $chart = new ScoreChart;
+            foreach ($users as $user) {
+                /** @var Collection $records */
+                $records = $user->records->filter(function ($value, $key) {
+                    return $value->is_correct;
+                })->groupBy('quest_id');
+                $tmp = [0 => ['x' => 0, 'y' => 0]];
+                $i = 1;
+                foreach ($records as $record_list) {
+                    $record = $record_list->first();
+                    array_push($tmp, ['x' => $i, 'y' => $tmp[$i - 1]['y'] + $record->point]);
+                    $i += 1;
+                }
+                $scores = array_merge($scores, [$user->name => end($tmp)['y']]);
+                $chart->labels(['A', 'B'])->dataset($user->name, 'scatter', $tmp)->options([
+                    'fill'        => false,
+                    'lineTension' => 0,
+                    'showLine'    => true,
+                    'borderColor' => $colorHash->hex($user->name),
+                ]);
             }
-            $scores = array_merge($scores, [$user->name => end($tmp)['y']]);
-            $chart->labels(['A', 'B'])->dataset($user->name, 'scatter', $tmp)->options([
-                'fill'        => false,
-                'lineTension' => 0,
-                'showLine'    => true,
-                'borderColor' => $colorHash->hex($user->name),
-            ]);
         }
+
         return view('scoreboard', compact('users', 'scores', 'chart'));
     }
 

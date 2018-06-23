@@ -67,8 +67,7 @@
         right: auto;
         left: 0;
         margin: 0;
-        padding: 0;
-        text-align: center;
+        padding: 0 0 0 5px;
         border-color: gold;
         width: 4em;
         height: 4em;
@@ -76,7 +75,7 @@
         -webkit-transition: border-color .1s ease;
         transition: border-color .1s ease;
         background-color: transparent !important;
-        color: rgba(0, 0, 0, 0.6);
+        color: gold;
     }
     .is-correct {
         background-color: #00d1b2;
@@ -84,7 +83,7 @@
     }
 
     .is-first {
-        background-color: goldenrod;
+        background-color: #00d1b2;
         color: #fff;
     }
 </style>
