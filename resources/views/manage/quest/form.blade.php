@@ -52,11 +52,11 @@
         <div class="field">
             <div class="control has-icons-left has-icons-right">
                 <label class="radio">
-                    {{ html()->input('radio', 'flag_type', '0') }}
+                    <input name="flag_type" value="{{ FLAG_DIRECT }}" type="radio">
                     一般
                 </label>
                 <label class="radio">
-                    {{ html()->input('radio', 'flag_type', '1') }}
+                    <input name="flag_type" value="{{ FLAG_REGEX }}" type="radio">
                     Regex
                 </label>
             </div>
@@ -69,10 +69,21 @@
         <label class="label">旗標</label>
     </div>
     <div class="field-body">
-        <div class="field">
-            <div class="control has-icons-left has-icons-right">
-                {{ html()->input('text', 'flag', '')->class('input')->attributes(["placeholder"=>"請輸入題目的自定義flag。", 'required'=>'required']) }}
-                <span class="icon is-left"><i class="far fa-flag"></i></span>
+        <div class="field is-expanded">
+            <div class="field has-addons">
+                <p class="control" id="flag-prefix" style="display: none;">
+                    <a class="button is-static">
+                        /^
+                    </a>
+                </p>
+                <p class="control is-expanded">
+                    {{ html()->input('text', 'flag', '')->class('input')->attributes(["placeholder"=>"請輸入題目的自定義flag。", 'required'=>'required']) }}
+                </p>
+                <p class="control" id="flag-suffix" style="display: none;">
+                    <a class="button is-static">
+                        $/
+                    </a>
+                </p>
             </div>
         </div>
     </div>

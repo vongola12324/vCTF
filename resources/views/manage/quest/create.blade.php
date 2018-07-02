@@ -28,6 +28,15 @@
                     $('input#category').val($(this).text());
                 })
             });
+            $('input[name=flag_type]').click(function () {
+                if ($(this).val() === '{{ FLAG_REGEX }}') {
+                    $('#flag-prefix').show();
+                    $('#flag-suffix').show();
+                } else {
+                    $('#flag-prefix').hide();
+                    $('#flag-suffix').hide();
+                }
+            });
         });
     </script>
 @endsection

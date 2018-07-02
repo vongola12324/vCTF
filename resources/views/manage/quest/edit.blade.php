@@ -34,8 +34,17 @@
             @if($quest->hidden)
             $('#hidden').attr('checked', 'checked');
             @endif
-            $('input[name=flag_type][value={{ $quest->flag_type }}]').attr('checked', 'checked');
-
+            $('input[name=flag_type]').click(function () {
+                console.log($(this).val());
+                if ($(this).val() === '{{ FLAG_REGEX }}') {
+                    $('#flag-prefix').show();
+                    $('#flag-suffix').show();
+                } else {
+                    $('#flag-prefix').hide();
+                    $('#flag-suffix').hide();
+                }
+            });
+            $('input[name=flag_type][value={{ $quest->flag_type }}]').click();
         });
     </script>
 @endsection

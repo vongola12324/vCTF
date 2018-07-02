@@ -21,7 +21,7 @@ class QuestService extends Service
         // 檢查Flag是否正確
         $correct = false;
         if ($quest->flag_type === FLAG_REGEX) {
-            $correct = preg_match($quest->flag, $flag) === 1;
+            $correct = preg_match(sprintf("/^%s$/", $quest->flag), $flag) === 1;
         } else {
             $correct = $flag === $quest->flag;
         }
