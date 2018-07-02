@@ -19,7 +19,7 @@
                         <span class="icon"><i class="far fa-download"></i></span>
                         <span>{{ attachment.filename }}</span>
                     </a>
-                    <template v-if="unlockHints.length > 0 && !isPass">
+                    <template v-if="Object.keys(this.unlockHints).length > 0 && !isPass">
                         <hr style="margin-top: 10px; margin-bottom: 10px;">
                         <h3 class="title is-4" style="margin-bottom: 5px;">本題有提示：</h3>
                         <ul :id="this.quest_id + '_hint_list'" style="margin-bottom: 5px;list-style: disc;padding-left: 2em;">
