@@ -3,7 +3,7 @@
 @section('title', '編輯題目')
 
 @section('css')
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/inscrybmde@1.11.3/dist/inscrybmde.min.css">
 @endsection
 
 @php($flag='edit')
@@ -17,11 +17,11 @@
 @endsection
 
 @section('js')
-    <script src="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/inscrybmde@1.11.3/dist/inscrybmde.min.js"></script>
     <script>
         $(document).ready(function () {
-            var contentMde = new SimpleMDE({ element: document.getElementById("content"), toolbarTips:false });
-            contentMde.value("{{ $quest->content }}");
+            var contentMde = new InscrybMDE({ element: document.getElementById("content"), toolbarTips:false });
+            contentMde.value($("textarea#content").text());
             $('form').on('submit', function (e) {
                 $("textarea#content").text(contentMde.value());
             });
