@@ -233,3 +233,5 @@ fabric.properties
 .idea/
 .phpstorm.meta.php
 _ide_helper.php
+public/css/app.css
+public/js/app.js
