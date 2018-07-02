@@ -35,7 +35,6 @@
             $('#hidden').attr('checked', 'checked');
             @endif
             $('input[name=flag_type]').click(function () {
-                console.log($(this).val());
                 if ($(this).val() === '{{ FLAG_REGEX }}') {
                     $('#flag-prefix').show();
                     $('#flag-suffix').show();
