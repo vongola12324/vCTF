@@ -5,14 +5,14 @@
                 <img src="{{ asset('img/logo-2.png') }}" alt="vCTF" style="width: 100%">
             </a>
 
-            <div class="navbar-burger">
+            <div role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
         </div>
 
-        <div class="navbar-menu">
+        <div class="navbar-menu" id="navMenu">
             <div class="navbar-start">
                 @include('components.navbar-item', ['items' => $left_nav->roots()])
             </div>
