@@ -36,6 +36,7 @@ class GenerateMenus
                     $adminMenu = $menu->add('管理選單', 'javascript:void(0)');
                     $adminMenu->add('隊伍管理', ['route' => 'user.index']);
                     $adminMenu->add('競賽管理', ['route' => 'contest.index']);
+                    $adminMenu->add('權限管理', ['route' => 'role.index']);
                     $adminMenu->add('紀錄檢視器', ['route' => 'log-viewer::dashboard', 'target' => '_blank', 'external' => true]);
                 }
                 $userMenu = $menu->add('<img src="'.Gravatar::src($user->email, 32).'" class="image is-32x32" style="border-radius: 50%;">', ['mobile' => false, 'alt' => '個人選單']);

@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function() {
             Route::patch('users/set-admin', 'ContestController@setUserAdmin')->name('contest.user.admin');
             Route::patch('users/set-hidden', 'ContestController@setUserHidden')->name('contest.user.hidden');
         });
+        Route::resource('role', 'RoleController')->except(['show']);
     });
 });
 
