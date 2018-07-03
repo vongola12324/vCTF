@@ -82,9 +82,8 @@
                         'email': value
                     }
                 }).done(function (data) {
-                    var result = JSON.parse(data);
-                    if (result['status'] === 1) {
-                        avatar.attr('src', result['data']['avatar']);
+                    if (data['status'] === 1) {
+                        avatar.attr('src', data['data']['avatar']);
                     }
                 }).fail(function (data) {
                     console.log('Get data failed.');
