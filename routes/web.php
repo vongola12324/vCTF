@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function() {
                 Route::post('file-upload', 'QuestController@uploadFile')->name('quest.upload');
                 Route::delete('file-delete', 'QuestController@deleteFile')->name('quest.file.delete');
                 Route::resource('hint', 'HintController')->except(['show']);
+                Route::resource('record', 'RecordController')->only(['index', 'destroy']);
+                Route::get('record/rejudge', 'RecordController@rejudge')->name('record.rejudge');
             });
             Route::get('users', 'ContestController@getUsersPage')->name('contest.user.page');
             Route::patch('users/set-admin', 'ContestController@setUserAdmin')->name('contest.user.admin');

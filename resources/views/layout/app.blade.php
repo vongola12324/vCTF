@@ -63,6 +63,7 @@
     })(jQuery, jQuery.fn.dataTable);
 </script>
 @include('components.alertify')
+<script src="//unpkg.com/tippy.js@2.5.3/dist/tippy.all.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
@@ -101,7 +102,10 @@
         if ($(dropdown).parent().hasClass('is-active')) {
             $(dropdown).parent().removeClass('is-active');
         }
-    })
+    });
+    $(document).ready(function () {
+        tippy('.tippy');
+    });
 </script>
 <script src="{{ asset('js/app.js') }}"></script>
 @yield('js')

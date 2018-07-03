@@ -56,6 +56,10 @@
                                             <span class="icon"><i class="far fa-edit"></i></span>
                                             <span>編輯提示</span>
                                         </a>
+                                        <a class="button is-link is-rounded" href="{{ route('record.index', [$contest, $quest]) }}" style="margin-bottom: 0;">
+                                            <span class="icon"><i class="far fa-search"></i></span>
+                                            <span>上傳答案管理</span>
+                                        </a>
                                     </div>
                                 </div>
                                 <button class="modal-close is-large" aria-label="close" @click.prevent="inactive"></button>

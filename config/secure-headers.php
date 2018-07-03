@@ -152,6 +152,7 @@ return [
                 'maxcdn.bootstrapcdn.com',
                 "cdnjs.cloudflare.com",
                 "cdn.datatables.net",
+                "unpkg.com",
             ],
 
             'hashes' => [

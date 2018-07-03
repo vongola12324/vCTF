@@ -2,84 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Contest;
+use App\Quest;
 use App\Record;
+use Artisan;
 use Illuminate\Http\Request;
 
 class RecordController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:judge.manage');
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
+     * @param Contest $contest
+     * @param Quest $quest
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function index(Contest $contest, Quest $quest)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Record  $record
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Record $record)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Record  $record
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Record $record)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Record  $record
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Record $record)
-    {
-        //
+        $records = Record::whereQuestId($quest->id)->with('user')->paginate();
+        return view('manage.record.index', compact('contest', 'quest', 'records'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Record  $record
+     * @param Contest $contest
+     * @param Quest $quest
+     * @param  \App\Record $record
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Record $record)
+    public function destroy(Contest $contest, Quest $quest, Record $record)
     {
-        //
+        try {
+            $record->delete();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('warning', '強制撤下失敗！');
+        }
+        return redirect()->back()->with('success', '強制撤下成功！');
+    }
+
+    public function rejudge(Contest $contest, Quest $quest)
+    {
+        Artisan::call('quest:rejudge', ['quest' => $quest->id]);
+        return redirect()->back()->with('success', '重審完成！');
     }
 }
