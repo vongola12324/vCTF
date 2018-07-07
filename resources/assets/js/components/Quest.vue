@@ -11,7 +11,7 @@
             <div class="modal-background" @click="inactive"></div>
             <div class="modal-content">
                 <div class="box">
-                    <p class="is-1 title">{{ this.quest['title'] }}</p>
+                    <p class="is-4 title">{{ this.quest['title'] }}</p>
                     <p class="subtitle">本題得分：{{ this.quest['point'] }}，解答狀況：{{ this.solved }} / {{ this.total }}</p>
                     <hr>
                     <div class="content" v-html="this.quest['content_html']"></div>
