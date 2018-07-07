@@ -4,14 +4,14 @@
             <div class="corner" v-if="isFirst">
                 <i class="far fa-crown"></i>
             </div>
-            <p class="title">{{ this.quest['title'] }}</p>
-            <p class="subtitle">{{ this.quest['point'] }}</p>
+            <p class="is-4 title">{{ this.quest['title'] }}</p>
+            <p class="is-4 subtitle">{{ this.quest['point'] }} {{ this.quest['point'] | pluralize('point')}}</p>
         </article>
         <div :class="['modal', {'is-active': isActive}]">
             <div class="modal-background" @click="inactive"></div>
             <div class="modal-content">
                 <div class="box">
-                    <p class="is-4 title">{{ this.quest['title'] }}</p>
+                    <p class="is-1 title">{{ this.quest['title'] }}</p>
                     <p class="subtitle">本題得分：{{ this.quest['point'] }}，解答狀況：{{ this.solved }} / {{ this.total }}</p>
                     <hr>
                     <div class="content" v-html="this.quest['content_html']"></div>
@@ -89,6 +89,8 @@
 </style>
 
 <script>
+    import Vue2Filters from 'vue2-filters';
+
     export default {
         mounted: function () {
             this.quest = {
@@ -112,6 +114,9 @@
                 isFailed: false,
                 unlockHints: []
             }
+        },
+        components: {
+            Vue2Filters
         },
         props: [
             'data_api',

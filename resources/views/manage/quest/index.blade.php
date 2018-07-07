@@ -22,7 +22,7 @@
                         <div class="is-2 column">
                             <div class="tile is-child notification is-link quest" data-target="modal_{{ $quest->id }}" id="quest_{{ $quest->id }}">
                                 <p class="is-4 title">{{ $quest->title }}</p>
-                                <p class="subtitle">{{ $quest->point }} pts.</p>
+                                <p class="subtitle">{{ $quest->point . ' ' . str_plural('point', $quest->point) }}</p>
                             </div>
                             <div class="modal" id="modal_{{ $quest->id }}">
                                 <div class="modal-background" onclick="closeQuest()"></div>
