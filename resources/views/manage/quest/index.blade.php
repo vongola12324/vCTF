@@ -29,7 +29,6 @@
                                 <div class="modal-content">
                                     <div class="box">
                                         <p class="is-1 title">{{ $quest->title }}</p>
-                                        <p class="subtitle">本題得分：{{ $quest->point }}，已解人數：0</p>
                                         <p class="subtitle">本題得分：{{ $quest->point }}，已解人數：{{ $quest->solved }}</p>
                                         <hr>
                                         <div class="content">

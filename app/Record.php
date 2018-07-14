@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $flag
  * @property bool $is_correct
  * @property bool $is_first
+ * @property int $point
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \App\Quest $quest
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereIsCorrect($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereIsFirst($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Record wherePoint($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereQuestId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Record whereUserId($value)
