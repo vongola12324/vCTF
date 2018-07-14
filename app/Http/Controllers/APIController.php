@@ -91,13 +91,7 @@ class APIController extends Controller
             $quest->makeHidden(['contest_id', 'hidden', 'created_at', 'updated_at']);
 
             $records = $quest->records->groupBy('user_id');
-            $solved = 0;
-            foreach ($records as $list) {
-                /** @var Collection $list */
-                if ($list->contains('is_correct', true)) {
-                    $solved += 1;
-                }
-            }
+            $solved = $quest->solved;
             $is_correct = false;
             $is_first = false;
             /** @var Collection $record */

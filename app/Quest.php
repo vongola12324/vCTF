@@ -90,4 +90,14 @@ class Quest extends Model
     {
         return Markdown::convertToHtml($this->content);
     }
+
+    public function getSolvedAttribute()
+    {
+        $solved = optional(optional($this->records()->where('is_correct', '=', true)->get())->groupBy('user_id'));
+        if ($solved === null) {
+            return 0;
+        } else {
+            return $solved->count();
+        }
+    }
 }
