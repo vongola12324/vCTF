@@ -29,7 +29,7 @@
                     <td>{{ $name }}</td>
                     <td>{{ $score }}</td>
                 </tr>
-                @if($name === array_keys($scores)[0])
+                @if($name === $scores->keys()[0])
                     @php($prev = $score)
                     @php($j=0)
                 @else
