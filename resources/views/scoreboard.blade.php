@@ -24,11 +24,6 @@
             <tbody>
             @php($i=1)
             @foreach($scores as $name => $score)
-                <tr>
-                    <td>{{ $i }}</td>
-                    <td>{{ $name }}</td>
-                    <td>{{ $score }}</td>
-                </tr>
                 @if($name === $scores->keys()[0])
                     @php($prev = $score)
                     @php($j=0)
@@ -41,6 +36,11 @@
                         @php($prev = $score)
                     @endif
                 @endif
+                <tr>
+                    <td>{{ $i }}</td>
+                    <td>{{ $name }}</td>
+                    <td>{{ $score }}</td>
+                </tr>
             @endforeach
             </tbody>
         </table>
