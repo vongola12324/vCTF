@@ -55,4 +55,11 @@ class Contest extends Model
     {
         return $this->belongsToMany('App\User', 'user_contest')->withPivot(['is_admin', 'is_hidden'])->using('App\Pivots\UserContest');
     }
+
+    public function getIsInProgressAttribute()
+    {
+        $start = $this->start_at === null ? now()->subDay() : $this->start_at;
+        $end = $this->end_at === null ? now()->addDay() : $this->end_at;
+        return now()->between($start, $end);
+    }
 }

@@ -41,8 +41,9 @@ class FrontController extends Controller
         if (!$this->isJoinContest()) {
             return redirect()->route('join.contest.page');
         }
+        $contest = $this->contest;
         $quests = $this->contest->quests->groupBy('category');
-        return view('quest', compact('quests'));
+        return view('quest', compact('quests', 'contest'));
     }
 
     public function scoreboard()
