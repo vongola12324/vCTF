@@ -59,9 +59,7 @@ class FrontController extends Controller
             $chart = new ScoreChart;
             foreach ($users as $user) {
                 /** @var Collection $records */
-                $records = $user->records->filter(function ($value, $key) {
-                    return $value->is_correct;
-                })->groupBy('quest_id');
+                $records = $user->records()->where('is_correct', '=', true)->get()->groupBy('quest_id');
                 $tmp = [0 => ['x' => 0, 'y' => 0]];
                 $i = 1;
                 foreach ($records as $record_list) {

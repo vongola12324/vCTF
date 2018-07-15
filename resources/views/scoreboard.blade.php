@@ -23,20 +23,23 @@
             </thead>
             <tbody>
             @php($i=1)
-            @php($prev = -1)
-            @php($j=0)
             @foreach($scores as $name => $score)
                 <tr>
                     <td>{{ $i }}</td>
                     <td>{{ $name }}</td>
                     <td>{{ $score }}</td>
                 </tr>
-                @if($prev === $score)
-                    @php($j+=1)
-                @else
-                    @php($i+=$j + 1)
-                    @php($j = 0)
+                @if($name === array_keys($scores)[0])
                     @php($prev = $score)
+                    @php($j=0)
+                @else
+                    @if($prev === $score)
+                        @php($j+=1)
+                    @else
+                        @php($i+=$j + 1)
+                        @php($j = 0)
+                        @php($prev = $score)
+                    @endif
                 @endif
             @endforeach
             </tbody>
