@@ -78,6 +78,7 @@ class FrontController extends Controller
                 ]);
             }
         }
+        $scores = collect($scores)->sort()->reverse();
 
         return view('scoreboard', compact('users', 'scores', 'chart'));
     }
