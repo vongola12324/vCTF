@@ -52,6 +52,7 @@ class FrontController extends Controller
         }
         $users = $this->contest->users()->with('records.quest')->wherePivot('is_hidden', false)->get();
         $scores = [];
+        $quests = $this->contest->quests->pluck('id');
         if ($users->count() === 0) {
             $chart = null;
         } else {
@@ -59,7 +60,7 @@ class FrontController extends Controller
             $chart = new ScoreChart;
             foreach ($users as $user) {
                 /** @var Collection $records */
-                $records = $user->records()->where('is_correct', '=', true)->get()->groupBy('quest_id');
+                $records = $user->records()->where('is_correct', '=', true)->whereIn('quest_id', $quests)->get()->groupBy('quest_id');
                 $tmp = [0 => ['x' => 0, 'y' => 0]];
                 $i = 1;
                 foreach ($records as $record_list) {
