@@ -3,6 +3,10 @@ os: linux
 dist: bionic
 language: php
 
+services:
+  - redis-server
+  - mysql
+
 # Define the php versions against we want to test our code
 php:
 - 7.2
