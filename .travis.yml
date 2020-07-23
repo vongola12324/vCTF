@@ -9,10 +9,6 @@ php:
 - 7.3
 - 7.4
 
-cache:
-  directories:
-    - $HOME/.composer/cache/files
-
 # Note: Code coverage requires php-xDebug extension enabled on CI server
 
 before_install:
